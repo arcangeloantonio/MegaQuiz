@@ -116,8 +116,8 @@ function CarregarTudo() {
 	context = canvas.getContext('2d');
 	
 	if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-		context.canvas.width  = window.innerWidth;
-		context.canvas.height = window.innerHeight;
+		if (window.innerWidth > canvas.width) context.canvas.width  = window.innerWidth;
+		if (window.innerHeight > canvas.height) context.canvas.height = window.innerHeight;
 	}
 	
 	screenWidth = canvas.width;
