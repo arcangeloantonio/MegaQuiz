@@ -171,17 +171,23 @@ function Draw() {
 }
 
 function KeyPress(evento) {
-	if (evento.keyCode == 13 && !roleta.girando) {
-		roleta.Girar();
-		roleta.girando = true;
+	if (evento.keyCode == 13) {
+		GirarRoleta();
 	}
 }
 
 function Tocou(evento) {
-	if (evento.targetTouches.length == 1) {
-		if (!roleta.girando) {
-			roleta.Girar();
-			roleta.girando = true;
-		}
+	if (evento.type == 'click') {
+		GirarRoleta();
+	}
+	else if (evento.type == 'touch' && evento.targetTouches.length == 1) {
+		GirarRoleta();
+	}
+}
+
+function GirarRoleta() {
+	if (!roleta.girando) {
+		roleta.Girar();
+		roleta.girando = true;
 	}
 }
