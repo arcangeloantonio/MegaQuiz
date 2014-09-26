@@ -1,87 +1,12 @@
-<input type="button" value="Girar" onclick="girar();" style="float: left;" />
-<canvas id="meuCanvas" width="800" height="600"></canvas>
-<script type="application/javascript">  
-	var anguloInicio = 0;
-	var arc = Math.PI / 3.5;
-	var acabarDeGirar = null;
-	
-	var girarAnguloComeco = 10;
-	var tempoGiro  = 0;
-	var tempoTotalGiro = 0;
-	
-	var context;
-	
-	function desenhar() {
-		desenharRoda();
-	}
-  
-	function desenharRoda() {
-		var canvas = document.getElementById("meuCanvas");
-		if (canvas.getContext) {
-			var raio = 200;
-      
-			context = canvas.getContext("2d");
-			context.clearRect(0,0,500,500);
-      
-			context.strokeStyle = "black";
-			context.lineWidth = 2;
-      
-			context.font = 'bold 12px sans-serif';
-      
-			for(var i = 0; i < 7; i++) {
-				var angle = anguloInicio + i * arc;
-				context.fillStyle = '#FF0000';
-				
-				context.beginPath();
-				context.arc(250, 250, raio, angle, angle + arc, false);
-				context.arc(250, 250, 0, angle + arc, angle, true);
-				context.stroke();
-				context.fill();
-				
-				context.save();
-				context.shadowOffsetX = -1;
-				context.shadowOffsetY = -1;
-				context.shadowBlur    = 0;
-				context.shadowColor   = "rgb(220,220,220)";
-				context.fillStyle = "white";
-				context.font = '20px sans-serif';
-				context.rotate(angle + arc / 2 + Math.PI / 2);
-				context.restore();
-			} 
-		}
-	}
-  
-	function girar() {
-		girarAnguloComeco = Math.random() * 10 + 10;
-		tempoGiro = 0;
-		tempoTotalGiro = Math.random() * 3 + 4 * 1000;
-		girarRoda();
-	}
-  
-	function girarRoda() {
-		tempoGiro += 20;
-		if(tempoGiro >= tempoTotalGiro) {
-		pararDeGirar();
-		return;
-		}
-		var anguloGirado = girarAnguloComeco - calcularGiro(tempoGiro, 0, girarAnguloComeco, tempoTotalGiro);
-		anguloInicio += (anguloGirado * Math.PI / 180);
-		desenharRoda();
-		acabarDeGirar = setTimeout('girarRoda()', 10);
-	}
-  
-	function pararDeGirar() {
-		clearTimeout(acabarDeGirar);
-		var graus = anguloInicio * 180 / Math.PI + 90;
-		var arcd = arc * 180 / Math.PI;
-		var indice = Math.floor((360 - graus % 360) / arcd);
-		alert("Materia " + (indice + 1));
-	}
-  
-	function calcularGiro(t, b, c, d) {
-		var ts = (t/=d)*t;
-		var tc = ts*t;
-		return b+c*(tc + -3*ts + 3*t);
-	}
-	desenhar();
-</script>
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>MegaQuiz!</title>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+		<script type="text/javascript" src="MegaQuiz.js"></script>
+		<script type="text/javascript" src="data.json"></script>
+	</head>
+	<body onload="CarregarTudo()" onkeydown="KeyPress(event)">
+		<canvas id="telaDeFundo" width="800" height="600"></canvas>
+	</body>
+</html>
