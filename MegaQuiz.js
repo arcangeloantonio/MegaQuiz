@@ -80,7 +80,7 @@ function Roleta() {
 		this.PararDeGirarRoleta();
 		return;
 		}
-		var anguloGiro = this.anguloGiroInicio - this.easeOut(this.tempoGiro, 0, this.anguloGiroInicio, this.tempoGiroTotal);
+		var anguloGiro = this.anguloGiroInicio - this.Transicao(this.tempoGiro, 0, this.anguloGiroInicio, this.tempoGiroTotal);
 		this.anguloInicio += (anguloGiro * Math.PI / 180);
 		this.Desenhar();
 		spinTimeout = setTimeout('roleta.GirarRoleta()', 5);
@@ -94,7 +94,7 @@ function Roleta() {
 	    this.materiaSelecionada = this.materias[index];
 	}
   
-	this.easeOut = function(t, b, c, d) {
+	this.Transicao = function(t, b, c, d) {
 		var ts = (t/=d)*t;
 		var tc = ts*t;
 		return b+c*(tc + -3*ts + 3*t);
@@ -110,6 +110,7 @@ function CarregarTudo() {
 	
 	canvas = document.getElementById('telaDeFundo');
 	canvas.addEventListener("touchstart", Tocou, false);
+	canvas.addEventListener("click", Tocou, false);
 	context = canvas.getContext('2d');
 	screenWidth = canvas.width;
 	screenHeight = canvas.height;
