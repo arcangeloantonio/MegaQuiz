@@ -170,16 +170,18 @@ function Draw() {
 	}
 }
 
-function KeyPress(event) {
-	if (event.keyCode == 13 && !roleta.girando) {
+function KeyPress(evento) {
+	if (evento.keyCode == 13 && !roleta.girando) {
 		roleta.Girar();
 		roleta.girando = true;
 	}
 }
 
-function Tocou() {
-	if (!roleta.girando) {
-		roleta.Girar();
-		roleta.girando = true;
+function Tocou(evento) {
+	if (evento.targetTouches.length == 1) {
+		if (!roleta.girando) {
+			roleta.Girar();
+			roleta.girando = true;
+		}
 	}
 }
