@@ -108,10 +108,18 @@ function LimparCanvas() {
 function CarregarTudo() {
 	//console.log(JSON.parse(data));
 	
+	
+	
 	canvas = document.getElementById('telaDeFundo');
 	canvas.addEventListener("touchstart", Tocou, false);
 	canvas.addEventListener("click", Tocou, false);
 	context = canvas.getContext('2d');
+	
+	if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+		context.canvas.width  = window.innerWidth;
+		context.canvas.height = window.innerHeight;
+	}
+	
 	screenWidth = canvas.width;
 	screenHeight = canvas.height;
 	desenharRoleta = true;
