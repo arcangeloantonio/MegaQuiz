@@ -186,17 +186,12 @@ function LimparCanvas() {
 }
 
 function CarregarTudo() {
-	//console.log(JSON.parse(data));
-	
+	window.addEventListener('resize', redimensionar, false);	
 	canvas = document.getElementById('telaDeFundo');
+	redimensionar();
 	canvas.addEventListener("touchstart", Tocou, false);
 	canvas.addEventListener("click", Tocou, false);
 	context = canvas.getContext('2d');
-	
-	if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-		if (window.innerWidth > canvas.width) context.canvas.width  = window.innerWidth;
-		if (window.innerHeight > canvas.height) context.canvas.height = window.innerHeight;
-	}
 
 	screenWidth = canvas.width;
 	screenHeight = canvas.height;
@@ -207,6 +202,14 @@ function CarregarTudo() {
 	
 	tela = TELAS.MENU;
 	setInterval(AtualizarDesenhar, 1000/60);
+}
+
+function redimensionar() {
+	var alturaNavegador = window.innerHeight;
+	var razao = canvas.width/canvas.height;
+	var larguraNavegador = alturaNavegador * razao;
+	canvas.style.width = larguraNavegador+'px';
+	canvas.style.height = alturaNavegador+'px';
 }
 
 function AtualizarDesenhar() {
@@ -256,10 +259,13 @@ function Tocou(evento) {
 	// }
 }
 
-function VerificaResposta(x, y) {
+function VerificaResposta(x, y) {	
+	var rect = canvas.getBoundingClientRect();
+	x = (x - rect.left) * (canvas.width/parseInt(canvas.style.width));
+	y = (y - rect.top) * (canvas.height/parseInt(canvas.style.height));
 	for (var p in perguntas.LETRAPERGUNTA) {
 		var perguntaDaVez = perguntas.LETRAPERGUNTA[p];
-		if (x >= perguntas.quadradoInicioX && x <= perguntas.quadradoLargura && y >= perguntaDaVez.altura+perguntas.distanciaFonteQuadrado && y <= perguntas.quadradoAltura+perguntaDaVez.altura) {
+		if (x >= perguntas.quadradoInicioX && x <= perguntas.quadradoLargura+perguntas.quadradoInicioX && y >= perguntaDaVez.altura+perguntas.distanciaFonteQuadrado && y <= perguntas.quadradoAltura+perguntaDaVez.altura+perguntas.distanciaFonteQuadrado) {
 			alert(p);
 		}
 	}
