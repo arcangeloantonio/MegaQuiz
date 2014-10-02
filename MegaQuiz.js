@@ -3,9 +3,47 @@ var screenHeight;
 var canvas;
 var context;
 
-var desenharRoleta;
-var roleta = new Roleta();
-	  
+var menu = {};
+var roleta = {};
+var perguntas = {};
+
+var TELAS = {
+	MENU: 0,
+	ROLETA: 1,
+	PERGUNTA: 2
+};
+
+var tela = 0;
+
+function Menu() {
+	this.frames = 0;
+	this.Desenhar = function() {
+		this.frames++;
+		LimparCanvas();
+		context.fillStyle = "#000000";
+		context.fillRect(0, 0, screenWidth, screenHeight);
+		
+		context.fillStyle = "#FFFFFF";
+		context.font="100px Georgia";
+		
+		var titulo = 'MegaQuiz!';
+		context.fillText(titulo, screenWidth/2 - context.measureText(titulo).width/2, 200); 
+		
+		if (this.frames > 0 && this.frames < 60) {
+			context.fillStyle = "#FFFFFF";
+		}
+		else {
+			context.fillStyle = "#FF0000";
+			if (this.frames > 120) this.frames = 0;
+		}
+		
+		context.font="50px Georgia";
+		var texto = 'Aperte enter para jogar!';
+		context.fillText(texto, screenWidth/2 - context.measureText(texto).width/2, 500);
+		
+	}
+}
+
 function Roleta() {
 	this.cores = ["#B8D430", "#3AB745", "#029990", "#3501CB", "#2E2C75", "#673A7E", "#CC0071"];
 	this.materias = ["Geografia", "Historia", "Matematica", "Portugues", "Biologia", "Fisica", "Química"];
@@ -77,8 +115,8 @@ function Roleta() {
 	this.GirarRoleta = function() {
 		this.tempoGiro += 10;
 		if(this.tempoGiro >= this.tempoGiroTotal) {
-		this.PararDeGirarRoleta();
-		return;
+			this.PararDeGirarRoleta();
+			return;
 		}
 		var anguloGiro = this.anguloGiroInicio - this.Transicao(this.tempoGiro, 0, this.anguloGiroInicio, this.tempoGiroTotal);
 		this.anguloInicio += (anguloGiro * Math.PI / 180);
@@ -90,7 +128,7 @@ function Roleta() {
 		var graus = this.anguloInicio * 180 / Math.PI + 90;
 		var arcd = this.arco * 180 / Math.PI;
 		var index = Math.floor((360 - graus % 360) / arcd);
-		setInterval(function() { desenharRoleta = false}, 500);
+		setInterval(function() { tela = TELAS.PERGUNTA}, 500);
 	    this.materiaSelecionada = this.materias[index];
 	}
   
@@ -101,14 +139,54 @@ function Roleta() {
 	}
 }
 
+function Perguntas() {
+	this.DesenharHUD = function() {
+		LimparCanvas();
+		context.fillStyle = "#000000";
+		context.fillRect(0, 0, screenWidth, screenHeight);
+		this.DesenharCabecalho(roleta.materiaSelecionada);
+		this.DesenharPergunta(this.LETRAPERGUNTA.A, 'Resposta A');
+		this.DesenharPergunta(this.LETRAPERGUNTA.B, 'Resposta B');
+		this.DesenharPergunta(this.LETRAPERGUNTA.C, 'Resposta C');
+		this.DesenharPergunta(this.LETRAPERGUNTA.D, 'Resposta D');
+	}
+	
+	this.DesenharCabecalho = function(materia) {
+		context.fillStyle = "#FF0000";
+		context.fillRect(50, 50, screenWidth - 100, 200);
+		context.fillStyle = "#FFFFFF";
+		context.font="30px Georgia";
+		context.fillText(materia, 60, 90);
+	}
+	
+	this.quadradoInicioX = 50;
+	this.quadradoAltura = 50;
+	this.quadradoLargura = screenWidth - 100;
+	this.distanciaFonteQuadrado = -30
+	
+	this.LETRAPERGUNTA = {
+		A: { texto: 'A', altura: 305 },
+		B: { texto: 'B', altura: 380 },
+		C: { texto: 'C', altura: 455 },
+		D: { texto: 'D', altura: 530 },
+	}
+	
+	this.DesenharPergunta = function(letraPergunta, texto) {
+		context.fillStyle = "#FF0000";
+		context.fillRect(this.quadradoInicioX, letraPergunta.altura+this.distanciaFonteQuadrado, this.quadradoLargura, this.quadradoAltura);
+		
+		context.fillStyle = "#FFFFFF";
+		context.font="20px Georgia";
+		context.fillText(texto, 60, letraPergunta.altura);
+	}
+}
+
 function LimparCanvas() {
 	context.clearRect(0, 0, screenWidth, screenHeight);
 }
 
 function CarregarTudo() {
 	//console.log(JSON.parse(data));
-	
-	
 	
 	canvas = document.getElementById('telaDeFundo');
 	canvas.addEventListener("touchstart", Tocou, false);
@@ -119,83 +197,74 @@ function CarregarTudo() {
 		if (window.innerWidth > canvas.width) context.canvas.width  = window.innerWidth;
 		if (window.innerHeight > canvas.height) context.canvas.height = window.innerHeight;
 	}
-	
+
 	screenWidth = canvas.width;
 	screenHeight = canvas.height;
-	desenharRoleta = true;
-	setInterval(GameLoop, 1000/60);
-}
-
-function GameLoop() {
-	Update();
-	Draw();
-}
-
-function Update() {
 	
+	menu = new Menu();
+	roleta = new Roleta();
+	perguntas = new Perguntas();
+	
+	tela = TELAS.MENU;
+	setInterval(AtualizarDesenhar, 1000/60);
 }
 
-function Draw() {
-	if (desenharRoleta) {
-		roleta.Desenhar();
-	}
-	else {
-		context.clearRect(0, 0, screenWidth, screenHeight);
-		context.fillStyle = "#000000";
-		context.fillRect(0, 0, screenWidth, screenHeight);
-		
-		context.fillStyle = "#FF0000";
-		context.fillRect(50, 50, screenWidth - 100, 200);
-		
-		
-		context.fillStyle = "#FF0000";
-		context.fillRect(50, 275, screenWidth - 100, 50);
-		
-		context.fillStyle = "#FF0000";
-		context.fillRect(50, 350, screenWidth - 100, 50);
-		
-		context.fillStyle = "#FF0000";
-		context.fillRect(50, 425, screenWidth - 100, 50);
-		
-		context.fillStyle = "#FF0000";
-		context.fillRect(50, 500, screenWidth - 100, 50);
-		
-		context.fillStyle = "#FFFFFF";
-		context.font="30px Georgia";
-		context.fillText(roleta.materiaSelecionada, 60, 90);
-		
-		context.font="20px Georgia";
-		context.fillText("Resposta A!", 60, 305);
-		
-		context.font="20px Georgia";
-		context.fillText("Resposta B!", 60, 380);
-		
-		context.font="20px Georgia";
-		context.fillText("Resposta C!", 60, 455);
-		
-		context.font="20px Georgia";
-		context.fillText("Resposta D!", 60, 530);
+function AtualizarDesenhar() {
+	switch (tela) {
+		case TELAS.MENU: 
+			menu.Desenhar();
+			break;
+		case TELAS.ROLETA:
+			roleta.Desenhar();
+			break;
+		case TELAS.PERGUNTA:
+			perguntas.DesenharHUD();
+			break;
 	}
 }
 
 function KeyPress(evento) {
 	if (evento.keyCode == 13) {
-		GirarRoleta();
+		switch (tela) {
+			case TELAS.MENU:
+				tela = TELAS.ROLETA;
+				break;
+			case TELAS.ROLETA:
+				GirarRoleta();
+				break;
+		}
 	}
 }
 
 function Tocou(evento) {
-	if (evento.type == 'click') {
-		GirarRoleta();
-	}
-	else if (evento.type == 'touch' && evento.targetTouches.length == 1) {
-		GirarRoleta();
+	// if (evento.type == 'click') {
+		switch (tela) {
+			case TELAS.MENU:
+				tela = TELAS.ROLETA;
+				break;
+			case TELAS.ROLETA:
+				GirarRoleta();
+				break;
+			case TELAS.PERGUNTA:
+				VerificaResposta(evento.clientX, evento.clientY);
+				break;
+		}
+	// }
+	// else if (evento.type == 'touch' && evento.targetTouches.length == 1) {
+		
+		// GirarRoleta();
+	// }
+}
+
+function VerificaResposta(x, y) {
+	for (var p in perguntas.LETRAPERGUNTA) {
+		var perguntaDaVez = perguntas.LETRAPERGUNTA[p];
+		if (x >= perguntas.quadradoInicioX && x <= perguntas.quadradoLargura && y >= perguntaDaVez.altura+perguntas.distanciaFonteQuadrado && y <= perguntas.quadradoAltura+perguntaDaVez.altura) {
+			alert(p);
+		}
 	}
 }
 
 function GirarRoleta() {
-	if (!roleta.girando) {
-		roleta.Girar();
-		roleta.girando = true;
-	}
+	roleta.Girar(); //TODO VERIFICAR SE A ROLETA JA ESTA GIRANDO
 }
