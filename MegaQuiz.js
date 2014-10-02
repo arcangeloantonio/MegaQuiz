@@ -186,8 +186,11 @@ function LimparCanvas() {
 }
 
 function CarregarTudo() {
+	window.addEventListener('load', function() {document.body.requestFullscreen();}, false);
 	window.addEventListener('resize', redimensionar, false);
 	window.addEventListener('orientationchange', redimensionar, false);
+	
+	
 	canvas = document.getElementById('telaDeFundo');
 	redimensionar();
 	canvas.addEventListener("touchstart", Tocou, false);
