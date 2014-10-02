@@ -209,7 +209,7 @@ function CarregarTudo() {
 }
 
 function redimensionar() {
-	var alturaNavegador = window.innerHeight;
+	var alturaNavegador = document.body.offsetHeight;
 	var razao = canvas.width/canvas.height;
 	var larguraNavegador = alturaNavegador * razao;
 	canvas.style.width = larguraNavegador+'px';
