@@ -1,1 +1,27 @@
-data = '[{"name" : "Harry", "age" : "32"}]';
+categorias = {
+	Geografia: { id: 1, categoria: 'Geografia'},
+	Historia: { id: 2, categoria: 'História'},
+	Matematica: { id: 3, categoria: 'Matemática'},
+	Portugues: { id: 4, categoria: 'Português'},
+	Biologia: { id: 5, categoria: 'Biologia'},
+	Fisica: { id: 6, categoria: 'Física'},
+	Quimica: { id: 7, categoria: 'Química'},
+}
+
+perguntas = [{
+	id: 1,
+	questao: 'blablabla',
+	respostas: ['resposta1','resposta2','resposta3','resposta4'],
+	respostaCerta: 0,
+	tempo: 90,
+	linkAjuda: 'www.blablabla.com',
+	categoria: categorias.Geografia
+	},  {
+	id: 2,
+	questao: 'blablabla2',
+	respostas: ['resposta1','resposta2','resposta3','resposta4'],
+	respostaCerta: 0,
+	tempo: 30,
+	linkAjuda: 'www.blablabla2.com',
+	categoria: categorias.Matematica
+}];

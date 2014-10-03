@@ -5,7 +5,7 @@ var context;
 
 var menu = {};
 var roleta = {};
-var perguntas = {};
+var pergunta = {};
 
 var TELAS = {
 	MENU: 0,
@@ -139,7 +139,7 @@ function Roleta() {
 	}
 }
 
-function Perguntas() {
+function Pergunta() {
 	this.DesenharHUD = function() {
 		LimparCanvas();
 		context.fillStyle = "#000000";
@@ -186,6 +186,7 @@ function LimparCanvas() {
 }
 
 function CarregarTudo() {
+	console.log(perguntas);
 	window.addEventListener('load', function() {document.body.requestFullscreen();}, false);
 	window.addEventListener('resize', redimensionar, false);
 	window.addEventListener('orientationchange', redimensionar, false);
@@ -202,7 +203,7 @@ function CarregarTudo() {
 	
 	menu = new Menu();
 	roleta = new Roleta();
-	perguntas = new Perguntas();
+	pergunta = new Pergunta();
 	
 	tela = TELAS.MENU;
 	setInterval(AtualizarDesenhar, 1000/60);
@@ -225,7 +226,7 @@ function AtualizarDesenhar() {
 			roleta.Desenhar();
 			break;
 		case TELAS.PERGUNTA:
-			perguntas.DesenharHUD();
+			pergunta.DesenharHUD();
 			break;
 	}
 }
@@ -267,9 +268,9 @@ function VerificaResposta(x, y) {
 	var rect = canvas.getBoundingClientRect();
 	x = (x - rect.left) * (canvas.width/parseInt(canvas.style.width));
 	y = (y - rect.top) * (canvas.height/parseInt(canvas.style.height));
-	for (var p in perguntas.LETRAPERGUNTA) {
-		var perguntaDaVez = perguntas.LETRAPERGUNTA[p];
-		if (x >= perguntas.quadradoInicioX && x <= perguntas.quadradoLargura+perguntas.quadradoInicioX && y >= perguntaDaVez.altura+perguntas.distanciaFonteQuadrado && y <= perguntas.quadradoAltura+perguntaDaVez.altura+perguntas.distanciaFonteQuadrado) {
+	for (var p in pergunta.LETRAPERGUNTA) {
+		var perguntaDaVez = pergunta.LETRAPERGUNTA[p];
+		if (x >= pergunta.quadradoInicioX && x <= pergunta.quadradoLargura+pergunta.quadradoInicioX && y >= perguntaDaVez.altura+pergunta.distanciaFonteQuadrado && y <= pergunta.quadradoAltura+perguntaDaVez.altura+pergunta.distanciaFonteQuadrado) {
 			alert(p);
 		}
 	}
