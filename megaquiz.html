@@ -5,10 +5,39 @@
 		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="mobile-web-app-capable" content="yes">
+		<link rel="stylesheet" type="text/css" href="MegaQuiz.css">
+		<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
 		<script type="text/javascript" src="MegaQuiz.js"></script>
 		<script type="text/javascript" src="perguntas.json"></script>
 	</head>
-	<body onload="CarregarTudo()" style="text-align:center;">
-		<canvas id="telaDeFundo" width="800" height="600"></canvas>
+	<body onload="AoCarregar()" style="text-align:center;">
+		<canvas id="telaDeFundo" width="800" height="600" tabindex="1"></canvas>
+		<div id="editarPerguntas">
+			<span id="tituloPerguntas">Editor de Perguntas</span>
+			<div id="containerCategoriasListaPerguntas">
+				<div class="containerInput">
+					<label class="labelInput">Categorias:</label>
+					<div class="elementoInput">
+						<select id="ddlCategorias"></select>
+					</div>
+				</div>
+				<div class="containerInput">
+					<label class="labelInput">Perguntas:</label>
+					<div id="groupPerguntas">
+							<li class="lnPergunta">Qual a cor de tudo?</li>
+							<li class="lnPergunta">Qual a cor de tudo?</li>
+					</div>
+				</div>
+			</div>
+			<div id="containerPerguntas" style="text-align:left; float:left;">
+				<div class="containerInput">
+					<label class="labelInput">Enunciado:</label>
+					<div class="elementoInput">
+						<input type="text">
+					</div>
+				</div>
+			</div>
+			<div class="clear"></div>
+		</div>
 	</body>
 </html>

@@ -13,7 +13,14 @@ var TELAS = {
 	PERGUNTA: 2
 };
 
+var menuPos = 0;
 var tela = 0;
+
+function desenharFonteCentro(contexto, texto, y, tamanhoFonte, cor) {					
+	context.font= tamanhoFonte + "px Georgia";
+	context.fillStyle = cor;
+	context.fillText(texto, screenWidth/2 - context.measureText(texto).width/2, y);	
+}
 
 function Menu() {
 	this.frames = 0;
@@ -22,25 +29,21 @@ function Menu() {
 		LimparCanvas();
 		context.fillStyle = "#000000";
 		context.fillRect(0, 0, screenWidth, screenHeight);
-		
-		context.fillStyle = "#FFFFFF";
-		context.font="100px Georgia";
-		
-		var titulo = 'MegaQuiz!';
-		context.fillText(titulo, screenWidth/2 - context.measureText(titulo).width/2, 200); 
-		
+
+		var corTitulo = '';
 		if (this.frames > 0 && this.frames < 60) {
-			context.fillStyle = "#FFFFFF";
+			corTitulo = "#FFFFFF";
 		}
 		else {
-			context.fillStyle = "#FF0000";
+			corTitulo = "#FF0000";
 			if (this.frames > 120) this.frames = 0;
 		}
 		
-		context.font="50px Georgia";
-		var texto = 'Aperte enter para jogar!';
-		context.fillText(texto, screenWidth/2 - context.measureText(texto).width/2, 500);
-		
+		desenharFonteCentro(context, "MegaQuiz!", 100, 100, corTitulo);
+		desenharFonteCentro(context, "Jogar", 220, 50, menuPos == 0 ? "#FF0000" : "#FFFFFF");
+		desenharFonteCentro(context, "Configurações", 320, 50, menuPos == 1 ? "#FF0000" : "#FFFFFF");
+		desenharFonteCentro(context, "Ajuda", 420, 50, menuPos == 2 ? "#FF0000" : "#FFFFFF");
+		desenharFonteCentro(context, "Créditos", 520, 50, menuPos == 3 ? "#FF0000" : "#FFFFFF");
 	}
 }
 
@@ -185,8 +188,48 @@ function LimparCanvas() {
 	context.clearRect(0, 0, screenWidth, screenHeight);
 }
 
-function CarregarTudo() {
-	console.log(perguntas);
+function AoCarregar() {
+	if (document.location.hash === "#editarPerguntas") {
+			$('#telaDeFundo').hide();
+			$('#editarPerguntas').show();
+			CarregarFormularioPerguntas();
+	}
+	else {
+		CarregarJogo();
+	}
+}
+
+function CarregarFormularioPerguntas() {
+	//$('#ddlCategorias').append
+	//console.log(categorias);
+	var html = '<option value="0">Selecione...</option>';
+	$.each(categorias, function( key, obj) {
+		
+		html += '<option value="' + obj.id + '">' + obj.categoria + '</option>';
+	});
+	$('#ddlCategorias').append(html);
+	
+	$('.lnPergunta').on('live', function() {	
+		$('.lnPergunta.selecionado').removeClass('selecionado');
+		$(this).addClass('selecionado');
+	});
+	
+	
+	$('#ddlCategorias').on('change', function() {
+		var categoriaId = $(this).val();
+		var listaPerguntas = '';
+		$('#groupPerguntas').empty();
+		$.each(perguntas, function( key, obj) {
+			if (obj.categoria.id == categoriaId) {
+				listaPerguntas += '<li  class="lnPergunta" data-categoriaId="obj.id">' + obj.questao + '</li>';
+			}
+		});
+		$('#groupPerguntas').append(listaPerguntas);
+	});
+	
+}
+
+function CarregarJogo() {	
 	window.addEventListener('load', function() {document.body.requestFullscreen();}, false);
 	window.addEventListener('resize', redimensionar, false);
 	window.addEventListener('orientationchange', redimensionar, false);
@@ -194,8 +237,9 @@ function CarregarTudo() {
 	
 	canvas = document.getElementById('telaDeFundo');
 	redimensionar();
+	document.addEventListener("keydown", KeyPress);
 	canvas.addEventListener("touchstart", Tocou, false);
-	canvas.addEventListener("click", Tocou, false);
+	//canvas.addEventListener("click", Tocou, false);
 	context = canvas.getContext('2d');
 
 	screenWidth = canvas.width;
@@ -232,13 +276,30 @@ function AtualizarDesenhar() {
 }
 
 function KeyPress(evento) {
-	if (evento.keyCode == 13) {
+	switch (evento.keyCode) {
+		case 13: //enter
+			switch (tela) {
+				case TELAS.MENU:
+					tela = TELAS.ROLETA;
+					break;
+				case TELAS.ROLETA:
+					GirarRoleta();
+					break;
+			}
+		break;
+		case 40: //baixo
 		switch (tela) {
-			case TELAS.MENU:
-				tela = TELAS.ROLETA;
+				case TELAS.MENU:
+					menuPos++;
+					if (menuPos > 3) menuPos = 0;
 				break;
-			case TELAS.ROLETA:
-				GirarRoleta();
+		}
+		break;
+		case 38:
+		switch (tela) {
+				case TELAS.MENU:
+					menuPos--;
+					if (menuPos < 0) menuPos = 3;
 				break;
 		}
 	}
@@ -246,6 +307,10 @@ function KeyPress(evento) {
 
 function Tocou(evento) {
 	// if (evento.type == 'click') {
+	
+	
+	
+	
 		switch (tela) {
 			case TELAS.MENU:
 				tela = TELAS.ROLETA;
@@ -257,6 +322,10 @@ function Tocou(evento) {
 				VerificaResposta(evento.clientX, evento.clientY);
 				break;
 		}
+		
+		
+		
+		
 	// }
 	// else if (evento.type == 'touch' && evento.targetTouches.length == 1) {
 		
