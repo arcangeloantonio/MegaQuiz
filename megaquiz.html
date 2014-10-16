@@ -8,27 +8,9 @@
 		<link rel="stylesheet" type="text/css" href="MegaQuiz.css">
 		<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
 		<script type="text/javascript" src="http://underscorejs.org/underscore-min.js"></script>
-		<script type="text/javascript" src="editor.js"></script>
+		<script type="text/javascript" src="Editor.js"></script>
 		<script type="text/javascript" src="MegaQuiz.js"></script>
-		<script type="text/javascript" src="perguntas.json"></script>
-		<script type="text/javascript">
-			function AJAX_JSON_Req( url )
-			{
-				var AJAX_req = new XMLHttpRequest();
-				AJAX_req.open( "GET", url, true );
-				AJAX_req.setRequestHeader("Content-type", "application/json");
-			
-				AJAX_req.onreadystatechange = function()
-				{
-					if( AJAX_req.readyState == 4 && AJAX_req.status == 200 )
-					{
-						var response = JSON.parse( AJAX_req.responseText );
-						document.write( response.name );
-					}
-				}
-				AJAX_req.send();
-			}
-		</script>		
+		<script type="text/javascript" src="Perguntas.json"></script>
 	</head>
 	<body onload="AoCarregar()" style="text-align:center;">
 		<canvas id="telaDeFundo" width="800" height="600" tabindex="1"></canvas>
