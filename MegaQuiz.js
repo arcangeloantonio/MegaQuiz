@@ -6,15 +6,22 @@ var context;
 var menu = {};
 var roleta = {};
 var pergunta = {};
+var configuracoes = {};
 
 var TELAS = {
 	MENU: 0,
 	ROLETA: 1,
-	PERGUNTA: 2
+	PERGUNTA: 2,
+	CONFIGURACOES: 3
 };
 
 var menuPos = 0;
 var tela = 0;
+
+var somAcerto;
+var somRoleta;
+var somErro;
+var somLigado;
 
 function desenharFonteCentro(contexto, texto, y, tamanhoFonte, cor) {					
 	context.font= tamanhoFonte + "px Georgia";
@@ -44,6 +51,31 @@ function Menu() {
 		desenharFonteCentro(context, "Configurações", 320, 50, menuPos == 1 ? "#FF0000" : "#FFFFFF");
 		desenharFonteCentro(context, "Ajuda", 420, 50, menuPos == 2 ? "#FF0000" : "#FFFFFF");
 		desenharFonteCentro(context, "Créditos", 520, 50, menuPos == 3 ? "#FF0000" : "#FFFFFF");
+	}
+}
+
+function Configuracoes() {
+	this.Desenhar = function() {
+		menu.Desenhar();
+		context.rect(100, 200, 600 , 50);
+		context.fillStyle = '#000000';
+		context.fill();
+		context.lineWidth = 7;
+		context.strokeStyle = '#FF0000';
+		context.stroke();
+		
+		
+		context.rect(100, 250, 600 , 175);
+		context.fillStyle = '#000000';
+		context.fill();
+		context.lineWidth = 7;
+		context.strokeStyle = '#FF0000';
+		context.stroke();
+		
+		
+		var textoSom = somLigado ? "LIGADO" : "DESLIGADO";
+		desenharFonteCentro(context, "Configurações", 235, 40, '#FF0000');
+		desenharFonteCentro(context, "Som < " + textoSom + " >", 300, 30, '#FF0000');
 	}
 }
 
@@ -116,6 +148,7 @@ function Roleta() {
 	}
   
 	this.GirarRoleta = function() {
+		if (somLigado) somRoleta.play();
 		this.tempoGiro += 10;
 		if(this.tempoGiro >= this.tempoGiroTotal) {
 			this.PararDeGirarRoleta();
@@ -133,6 +166,10 @@ function Roleta() {
 		var index = Math.floor((360 - graus % 360) / arcd);
 		setInterval(function() { tela = TELAS.PERGUNTA}, 500);
 	    this.materiaSelecionada = this.materias[index];
+		if (somLigado) { 
+			somRoleta.pause();
+			somRoleta.currentTime = 0.0;
+		}
 	}
   
 	this.Transicao = function(t, b, c, d) {
@@ -192,62 +229,39 @@ function AoCarregar() {
 	if (document.location.hash === "#editarPerguntas") {
 			$('#telaDeFundo').hide();
 			$('#editarPerguntas').show();
-			CarregarFormularioPerguntas();
+			Editor.Iniciar();
 	}
 	else {
 		CarregarJogo();
 	}
 }
 
-function CarregarFormularioPerguntas() {
-	//$('#ddlCategorias').append
-	//console.log(categorias);
-	var html = '<option value="0">Selecione...</option>';
-	$.each(categorias, function( key, obj) {
-		
-		html += '<option value="' + obj.id + '">' + obj.categoria + '</option>';
-	});
-	$('#ddlCategorias').append(html);
-	
-	$('.lnPergunta').on('live', function() {	
-		$('.lnPergunta.selecionado').removeClass('selecionado');
-		$(this).addClass('selecionado');
-	});
-	
-	
-	$('#ddlCategorias').on('change', function() {
-		var categoriaId = $(this).val();
-		var listaPerguntas = '';
-		$('#groupPerguntas').empty();
-		$.each(perguntas, function( key, obj) {
-			if (obj.categoria.id == categoriaId) {
-				listaPerguntas += '<li  class="lnPergunta" data-categoriaId="obj.id">' + obj.questao + '</li>';
-			}
-		});
-		$('#groupPerguntas').append(listaPerguntas);
-	});
-	
-}
-
 function CarregarJogo() {	
 	window.addEventListener('load', function() {document.body.requestFullscreen();}, false);
 	window.addEventListener('resize', redimensionar, false);
 	window.addEventListener('orientationchange', redimensionar, false);
-	
+	somLigado = true;
 	
 	canvas = document.getElementById('telaDeFundo');
 	redimensionar();
 	document.addEventListener("keydown", KeyPress);
 	canvas.addEventListener("touchstart", Tocou, false);
-	//canvas.addEventListener("click", Tocou, false);
+	canvas.addEventListener("click", Tocou, false);
 	context = canvas.getContext('2d');
 
+	
+	somAcerto = new Audio("Acerto.mp3");
+	somRoleta = new Audio("Roleta.mp3");
+	somErro = new Audio("Erro.mp3");
+	
+	
 	screenWidth = canvas.width;
 	screenHeight = canvas.height;
 	
 	menu = new Menu();
 	roleta = new Roleta();
 	pergunta = new Pergunta();
+	configuracoes = new Configuracoes();
 	
 	tela = TELAS.MENU;
 	setInterval(AtualizarDesenhar, 1000/60);
@@ -272,6 +286,9 @@ function AtualizarDesenhar() {
 		case TELAS.PERGUNTA:
 			pergunta.DesenharHUD();
 			break;
+		case TELAS.CONFIGURACOES:
+			configuracoes.Desenhar();
+			break;
 	}
 }
 
@@ -280,28 +297,60 @@ function KeyPress(evento) {
 		case 13: //enter
 			switch (tela) {
 				case TELAS.MENU:
-					tela = TELAS.ROLETA;
+					if (menuPos == 0) {
+						tela = TELAS.ROLETA;
+					}
+					else if (menuPos == 1) {
+						tela = TELAS.CONFIGURACOES;
+					}
 					break;
 				case TELAS.ROLETA:
 					GirarRoleta();
+					break;
+				case TELAS.CONFIGURACOES:
+					menuPos = 1;
+					tela = TELAS.MENU;
+					break;					
+			}
+		break;
+		case 27:
+			switch (tela) {
+				case TELAS.CONFIGURACOES:
+					menuPos = 1;
+					tela = TELAS.MENU;
+				break;
+			}
+		break;
+		case 37: //<
+			switch (tela) {
+				case TELAS.CONFIGURACOES:
+					somLigado = !somLigado;
+					break;
+			}
+		break;
+		case 38:
+			switch (tela) {
+					case TELAS.MENU:
+						menuPos--;
+						if (menuPos < 0) menuPos = 3;
+					break;
+			}
+		break;
+		case 39: //>
+			switch (tela) {
+				case TELAS.CONFIGURACOES:
+					somLigado = !somLigado;
 					break;
 			}
 		break;
 		case 40: //baixo
 		switch (tela) {
-				case TELAS.MENU:
-					menuPos++;
-					if (menuPos > 3) menuPos = 0;
-				break;
+			case TELAS.MENU:
+				menuPos++;
+				if (menuPos > 3) menuPos = 0;
+			break;
 		}
 		break;
-		case 38:
-		switch (tela) {
-				case TELAS.MENU:
-					menuPos--;
-					if (menuPos < 0) menuPos = 3;
-				break;
-		}
 	}
 }
 
@@ -340,7 +389,12 @@ function VerificaResposta(x, y) {
 	for (var p in pergunta.LETRAPERGUNTA) {
 		var perguntaDaVez = pergunta.LETRAPERGUNTA[p];
 		if (x >= pergunta.quadradoInicioX && x <= pergunta.quadradoLargura+pergunta.quadradoInicioX && y >= perguntaDaVez.altura+pergunta.distanciaFonteQuadrado && y <= pergunta.quadradoAltura+perguntaDaVez.altura+pergunta.distanciaFonteQuadrado) {
-			alert(p);
+			if (p === 'A' && somLigado) {
+				somAcerto.play();
+			}
+			if (p === 'C' && somLigado) {
+				somErro.play();
+			}
 		}
 	}
 }

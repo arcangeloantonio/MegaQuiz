@@ -7,37 +7,75 @@
 		<meta name="mobile-web-app-capable" content="yes">
 		<link rel="stylesheet" type="text/css" href="MegaQuiz.css">
 		<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript" src="editor.js"></script>
 		<script type="text/javascript" src="MegaQuiz.js"></script>
 		<script type="text/javascript" src="perguntas.json"></script>
 	</head>
 	<body onload="AoCarregar()" style="text-align:center;">
 		<canvas id="telaDeFundo" width="800" height="600" tabindex="1"></canvas>
-		<div id="editarPerguntas">
-			<span id="tituloPerguntas">Editor de Perguntas</span>
-			<div id="containerCategoriasListaPerguntas">
-				<div class="containerInput">
-					<label class="labelInput">Categorias:</label>
-					<div class="elementoInput">
-						<select id="ddlCategorias"></select>
+		<div id="editarPerguntas" style="display:none;">
+			<div><span id="tituloPerguntas">Editor de Perguntas</span></div>
+			<div id="content">
+				<div id="containerCategoriasListaPerguntas">
+					<div class="containerInput">
+						<label class="labelInput">Categorias:</label>
+						<div class="elementoInput">
+							<select id="ddlCategorias"></select>
+						</div>
+					</div>
+					<div class="containerInput">
+						<label class="labelInput">Perguntas:</label>
+						<div id="groupPerguntas">
+						</div>
 					</div>
 				</div>
-				<div class="containerInput">
-					<label class="labelInput">Perguntas:</label>
-					<div id="groupPerguntas">
-							<li class="lnPergunta">Qual a cor de tudo?</li>
-							<li class="lnPergunta">Qual a cor de tudo?</li>
+				<div id="containerPerguntas">
+					<div class="containerInput containerEnunciado">
+						<label class="labelInput">Enunciado:</label>
+						<div class="elementoInput">
+							<input type="text" id="txtEnunciado">
+						</div>
 					</div>
+					<div class="containerInput float containerCategoria">
+						<label class="labelInput">Categoria:</label>
+						<div class="elementoInput">
+							<select id="ddlCategoria"></select>
+						</div>
+					</div>
+					<div class="containerInput float containerTempo">
+						<label class="labelInput">Tempo em segundos:</label>
+						<div class="elementoInput">
+							<input type="text" id="txtTempo">
+						</div>
+					</div>
+					<div class="clear"></div>
+					<div id="containerQuestoesGeral">
+						<div id="containerQuestoes">
+							<span id="spnQuestoes">Questões</span>
+							<div>
+								<div class="containerResposta"><label class="lblResposta">A:</label><input type="text" class="txtResposta" id="txtResposta1"></div>
+								<div class="containerResposta"><label class="lblResposta">B:</label><input type="text" class="txtResposta" id="txtResposta2"></div>
+								<div class="containerResposta"><label class="lblResposta">C:</label><input type="text" class="txtResposta" id="txtResposta3"></div>
+								<div class="containerResposta"><label class="lblResposta">D:</label><input type="text" class="txtResposta" id="txtResposta4"></div>
+								<div class="containerResposta"><label class="lblResposta">E:</label><input type="text" class="txtResposta" id="txtResposta5"></div>
+							</div>
+						</div>
+						<div id="containerCorretas">
+							<span id="spnCorreta">Correta?</span>
+							<div class="containerCorreta"><input type="radio" name="rdbResposta" id="rdbResposta1" /></div>
+							<div class="containerCorreta"><input type="radio" name="rdbResposta" id="rdbResposta2" /></div>
+							<div class="containerCorreta"><input type="radio" name="rdbResposta" id="rdbResposta3" /></div>
+							<div class="containerCorreta"><input type="radio" name="rdbResposta" id="rdbResposta4" /></div>
+							<div class="containerCorreta"><input type="radio" name="rdbResposta" id="rdbResposta5" /></div>
+						</div>
+					</div>
+					<div id="containerBotao">
+							<button>Salvar</button>
+						</div>
 				</div>
+				<div class="clear"></div>
+				
 			</div>
-			<div id="containerPerguntas" style="text-align:left; float:left;">
-				<div class="containerInput">
-					<label class="labelInput">Enunciado:</label>
-					<div class="elementoInput">
-						<input type="text">
-					</div>
-				</div>
-			</div>
-			<div class="clear"></div>
 		</div>
 	</body>
 </html>

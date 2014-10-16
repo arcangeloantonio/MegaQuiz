@@ -1,6 +1,6 @@
-/* #editarPerguntas {
-	margin:30px;
-} */
+#content {
+	margin-top:20px;
+}
 
 #tituloPerguntas {
 	text-align:center;
@@ -32,22 +32,99 @@
 
 #groupPerguntas .lnPergunta {
 	list-style:none;
-	margin-left:5px;
+	padding-left:5px;
 }
 
 #groupPerguntas .lnPergunta:hover {
-	background-color:#FF0;
+	background-color:#3399FF;
 	cursor:default;
 	
 }
 
 #groupPerguntas .lnPergunta.selecionado {
-	background-color:#FF0;
+	background-color:#3399FF;
 	cursor:default;
 }
 
 #containerPerguntas {
 	margin-left:60px;
+	text-align:left;
+	float:left;
+	width: 600px;
+}
+
+#containerPerguntas > .containerTempo {
+	margin-top:10px;
+}
+#containerPerguntas > .containerCategoria {
+	margin-top:10px;
+	width:440px;
+}
+
+#containerPerguntas > .containerCategoria #ddlCategoria{
+	width:410px;
+}
+
+#containerPerguntas > .containerTempo #txtTempo {
+	width:130px;
+}
+
+#containerPerguntas .containerEnunciado {
+	width: 600px;
+}
+
+#containerPerguntas > .containerEnunciado #txtEnunciado {
+	width: 570px;
+}
+
+#containerQuestoesGeral {
+	margin-top:10px;
+}
+
+#containerQuestoes {
+	width:450px;
+	float:left;
+}
+
+#containerQuestoes > #spnQuestoes{
+	font-size:14px;
+	display:inline-block;
+	margin-bottom:5px;
+}
+
+#containerQuestoes .lblResposta {
+	float:left;
+	width:20px;
+}
+
+#containerQuestoes .txtResposta {
+	width:385px;
+}
+
+#containerQuestoes  .containerResposta {
+	margin-bottom:10px;
+}
+
+#containerCorretas {
+	width:150px;
+	float:left;
+}
+
+#containerCorretas  > #spnCorreta { 
+	font-size:14px;
+	display:inline-block;
+	margin-bottom:5px;
+}
+
+#containerCorretas  .containerCorreta {
+	margin-bottom:10px;
+	padding-top:1px;
+}
+
+#containerBotao {
+	margin-top:300px;
+	text-align:right;
+	padding-right:80px;
 }
 
 .containerInput > label.labelInput {
@@ -62,4 +139,8 @@
 
 .clear {
 	clear:both;
+}
+
+.float {
+	float:left;
 }
