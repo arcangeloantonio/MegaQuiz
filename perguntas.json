@@ -15,7 +15,8 @@ perguntas = [{
 	respostaCerta: 1,
 	tempo: 90,
 	linkAjuda: 'www.blablabla.com',
-	categoria: categorias.Geografia
+	categoria: categorias.Geografia,
+	respondida: false
 	},  {
 	id: 2,
 	questao: 'blablabla2',
@@ -23,5 +24,6 @@ perguntas = [{
 	respostaCerta: 1,
 	tempo: 30,
 	linkAjuda: 'www.blablabla2.com',
-	categoria: categorias.Matematica
+	categoria: categorias.Matematica,
+	respondida: false
 }];

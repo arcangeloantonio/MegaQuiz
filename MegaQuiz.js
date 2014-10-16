@@ -7,12 +7,16 @@ var menu = {};
 var roleta = {};
 var pergunta = {};
 var configuracoes = {};
+var ajuda = {};
+var creditos = {};
 
 var TELAS = {
 	MENU: 0,
 	ROLETA: 1,
 	PERGUNTA: 2,
-	CONFIGURACOES: 3
+	CONFIGURACOES: 3,
+	AJUDA: 4,
+	CREDITOS: 5
 };
 
 var menuPos = 0;
@@ -74,8 +78,57 @@ function Configuracoes() {
 		
 		
 		var textoSom = somLigado ? "LIGADO" : "DESLIGADO";
-		desenharFonteCentro(context, "Configurações", 235, 40, '#FF0000');
+		desenharFonteCentro(context, "Configurações", 235, 30, '#FF0000');
 		desenharFonteCentro(context, "Som < " + textoSom + " >", 300, 30, '#FF0000');
+	}
+}
+
+function Ajuda() {
+	this.Desenhar = function() {
+		menu.Desenhar();
+		context.rect(100, 200, 600 , 50);
+		context.fillStyle = '#000000';
+		context.fill();
+		context.lineWidth = 7;
+		context.strokeStyle = '#FF0000';
+		context.stroke();
+		
+		
+		context.rect(100, 250, 600 , 175);
+		context.fillStyle = '#000000';
+		context.fill();
+		context.lineWidth = 7;
+		context.strokeStyle = '#FF0000';
+		context.stroke();
+
+		desenharFonteCentro(context, "Ajuda", 235, 30, '#FF0000');
+		desenharFonteCentro(context, "Teste", 300, 30, '#FF0000');
+	}
+}
+
+function Creditos() {
+	this.Desenhar = function() {
+		menu.Desenhar();
+		context.rect(100, 200, 600 , 50);
+		context.fillStyle = '#000000';
+		context.fill();
+		context.lineWidth = 7;
+		context.strokeStyle = '#FF0000';
+		context.stroke();
+		
+		
+		context.rect(100, 250, 600 , 175);
+		context.fillStyle = '#000000';
+		context.fill();
+		context.lineWidth = 7;
+		context.strokeStyle = '#FF0000';
+		context.stroke();
+
+		desenharFonteCentro(context, "Créditos", 235, 30, '#FF0000');
+		desenharFonteCentro(context, "Programação: Antonio Ruggiero Arcangelo", 300, 30, '#FF0000');
+		desenharFonteCentro(context, "Game Design: Diego Fernandes Resende", 350, 30, '#FF0000');
+		desenharFonteCentro(context, "Arte: Stephen Cralcev", 400, 30, '#FF0000');
+		
 	}
 }
 
@@ -226,7 +279,7 @@ function LimparCanvas() {
 }
 
 function AoCarregar() {
-	if (document.location.hash === "#editarPerguntas") {
+	if (document.location.hash === "#editor") {
 			$('#telaDeFundo').hide();
 			$('#editarPerguntas').show();
 			Editor.Iniciar();
@@ -262,6 +315,8 @@ function CarregarJogo() {
 	roleta = new Roleta();
 	pergunta = new Pergunta();
 	configuracoes = new Configuracoes();
+	ajuda = new Ajuda();
+	creditos = new Creditos();
 	
 	tela = TELAS.MENU;
 	setInterval(AtualizarDesenhar, 1000/60);
@@ -289,6 +344,13 @@ function AtualizarDesenhar() {
 		case TELAS.CONFIGURACOES:
 			configuracoes.Desenhar();
 			break;
+		case TELAS.CREDITOS:
+			creditos.Desenhar();
+			break;
+		case TELAS.AJUDA:
+			ajuda.Desenhar();
+			break;
+		
 	}
 }
 
@@ -303,6 +365,13 @@ function KeyPress(evento) {
 					else if (menuPos == 1) {
 						tela = TELAS.CONFIGURACOES;
 					}
+					else if (menuPos == 2) {
+						tela = TELAS.AJUDA;
+						
+					}
+					else if (menuPos == 3) {
+						tela = TELAS.CREDITOS;
+					}
 					break;
 				case TELAS.ROLETA:
 					GirarRoleta();
@@ -310,7 +379,15 @@ function KeyPress(evento) {
 				case TELAS.CONFIGURACOES:
 					menuPos = 1;
 					tela = TELAS.MENU;
-					break;					
+					break;
+				case TELAS.AJUDA:
+					menuPos = 2;
+					tela = TELAS.MENU;
+					break;
+				case TELAS.CREDITOS:
+					menuPos = 3;
+					tela = TELAS.MENU;
+					break;
 			}
 		break;
 		case 27:
@@ -319,6 +396,14 @@ function KeyPress(evento) {
 					menuPos = 1;
 					tela = TELAS.MENU;
 				break;
+				case TELAS.AJUDA:
+					menuPos = 2;
+					tela = TELAS.MENU;
+					break;
+				case TELAS.CREDITOS:
+					menuPos = 3;
+					tela = TELAS.MENU;
+					break;
 			}
 		break;
 		case 37: //<
@@ -355,31 +440,17 @@ function KeyPress(evento) {
 }
 
 function Tocou(evento) {
-	// if (evento.type == 'click') {
-	
-	
-	
-	
-		switch (tela) {
-			case TELAS.MENU:
-				tela = TELAS.ROLETA;
-				break;
-			case TELAS.ROLETA:
-				GirarRoleta();
-				break;
-			case TELAS.PERGUNTA:
-				VerificaResposta(evento.clientX, evento.clientY);
-				break;
-		}
-		
-		
-		
-		
-	// }
-	// else if (evento.type == 'touch' && evento.targetTouches.length == 1) {
-		
-		// GirarRoleta();
-	// }
+	switch (tela) {
+		case TELAS.MENU:
+			tela = TELAS.ROLETA;
+			break;
+		case TELAS.ROLETA:
+			GirarRoleta();
+			break;
+		case TELAS.PERGUNTA:
+			VerificaResposta(evento.clientX, evento.clientY);
+			break;
+	}
 }
 
 function VerificaResposta(x, y) {	

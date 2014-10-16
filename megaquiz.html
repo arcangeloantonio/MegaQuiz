@@ -7,9 +7,28 @@
 		<meta name="mobile-web-app-capable" content="yes">
 		<link rel="stylesheet" type="text/css" href="MegaQuiz.css">
 		<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript" src="http://underscorejs.org/underscore-min.js"></script>
 		<script type="text/javascript" src="editor.js"></script>
 		<script type="text/javascript" src="MegaQuiz.js"></script>
 		<script type="text/javascript" src="perguntas.json"></script>
+		<script type="text/javascript">
+			function AJAX_JSON_Req( url )
+			{
+				var AJAX_req = new XMLHttpRequest();
+				AJAX_req.open( "GET", url, true );
+				AJAX_req.setRequestHeader("Content-type", "application/json");
+			
+				AJAX_req.onreadystatechange = function()
+				{
+					if( AJAX_req.readyState == 4 && AJAX_req.status == 200 )
+					{
+						var response = JSON.parse( AJAX_req.responseText );
+						document.write( response.name );
+					}
+				}
+				AJAX_req.send();
+			}
+		</script>		
 	</head>
 	<body onload="AoCarregar()" style="text-align:center;">
 		<canvas id="telaDeFundo" width="800" height="600" tabindex="1"></canvas>
@@ -37,9 +56,26 @@
 						</div>
 					</div>
 					<div class="containerInput float containerCategoria">
-						<label class="labelInput">Categoria:</label>
+						<label class="labelInput">Dificuldade:</label>
 						<div class="elementoInput">
 							<select id="ddlCategoria"></select>
+						</div>
+					</div>
+					<div class="containerInput float containerDificuldade">
+						<label class="labelInput">Categoria:</label>
+						<div class="elementoInput">
+							<select id="ddlDificuldade">
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6">6</option>
+								<option value="7">7</option>
+								<option value="8">8</option>
+								<option value="9">9</option>
+								<option value="10">10</option>
+							</select>
 						</div>
 					</div>
 					<div class="containerInput float containerTempo">
@@ -70,7 +106,7 @@
 						</div>
 					</div>
 					<div id="containerBotao">
-							<button>Salvar</button>
+							<button id="btnSalvar">Salvar</button>
 						</div>
 				</div>
 				<div class="clear"></div>

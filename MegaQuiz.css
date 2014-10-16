@@ -58,11 +58,20 @@
 }
 #containerPerguntas > .containerCategoria {
 	margin-top:10px;
-	width:440px;
+	width:300px;
 }
 
 #containerPerguntas > .containerCategoria #ddlCategoria{
-	width:410px;
+	width:280px;
+}
+
+#containerPerguntas > .containerDificuldade {
+	margin-top:10px;
+	width:140px;
+}
+
+#containerPerguntas > .containerDificuldade #ddlDificuldade{
+	width:100px;
 }
 
 #containerPerguntas > .containerTempo #txtTempo {
