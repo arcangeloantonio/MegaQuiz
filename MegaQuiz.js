@@ -16,7 +16,8 @@ var TELAS = {
 	PERGUNTA: 2,
 	CONFIGURACOES: 3,
 	AJUDA: 4,
-	CREDITOS: 5
+	CREDITOS: 5,
+	SENHA: 6
 };
 
 var menuPos = 0;
@@ -55,6 +56,11 @@ function Menu() {
 		desenharFonteCentro(context, "Configurações", 320, 50, menuPos == 1 ? "#FF0000" : "#FFFFFF");
 		desenharFonteCentro(context, "Ajuda", 420, 50, menuPos == 2 ? "#FF0000" : "#FFFFFF");
 		desenharFonteCentro(context, "Créditos", 520, 50, menuPos == 3 ? "#FF0000" : "#FFFFFF");
+		
+		context.font= "30px Georgia";
+		context.fillStyle = '#FF0000';
+		context.fillText('Editar perguntas', 10, 590);
+		
 	}
 }
 
@@ -103,6 +109,30 @@ function Ajuda() {
 
 		desenharFonteCentro(context, "Ajuda", 235, 30, '#FF0000');
 		desenharFonteCentro(context, "Teste", 300, 30, '#FF0000');
+	}
+}
+
+function Senha() {
+	this.Texto = '';
+	this.Desenhar = function() {
+		menu.Desenhar();
+		context.rect(100, 200, 600 , 50);
+		context.fillStyle = '#000000';
+		context.fill();
+		context.lineWidth = 7;
+		context.strokeStyle = '#FF0000';
+		context.stroke();
+		
+		
+		context.rect(100, 250, 600 , 175);
+		context.fillStyle = '#000000';
+		context.fill();
+		context.lineWidth = 7;
+		context.strokeStyle = '#FF0000';
+		context.stroke();
+
+		desenharFonteCentro(context, "Editar Perguntas", 235, 30, '#FF0000');
+		desenharFonteCentro(context, this.Texto, 300, 30, '#FF0000');
 	}
 }
 
@@ -317,6 +347,7 @@ function CarregarJogo() {
 	configuracoes = new Configuracoes();
 	ajuda = new Ajuda();
 	creditos = new Creditos();
+	senha = new Senha();
 	
 	tela = TELAS.MENU;
 	setInterval(AtualizarDesenhar, 1000/60);
@@ -350,99 +381,119 @@ function AtualizarDesenhar() {
 		case TELAS.AJUDA:
 			ajuda.Desenhar();
 			break;
-		
+		case TELAS.SENHA:
+			senha.Desenhar();
 	}
 }
 
 function KeyPress(evento) {
-	switch (evento.keyCode) {
-		case 13: //enter
+	console.log(evento);
+	if (tela == TELAS.SENHA) {
+		if (evento.keyCode == 8) {
+			evento.preventDefault();
+			senha.Texto = senha.Texto.substring(0, senha.Texto.length-1);
+		}
+		else if (evento.keyCode == 13) {
+			//mudatela
+		}
+		else {
+			console.log((eval(evento.shiftKey)));
+			var digitado = String.fromCharCode(event.which);
+			digitado = evento.shiftKey ? digitado.toUpperCase() : digitado.toLowerCase();
+			senha.Texto += digitado;
+		}
+	}
+	else {
+		switch (evento.keyCode) {
+			case 13: //enter
+				switch (tela) {
+					case TELAS.MENU:
+						if (menuPos == 0) {
+							tela = TELAS.ROLETA;
+						}
+						else if (menuPos == 1) {
+							tela = TELAS.CONFIGURACOES;
+						}
+						else if (menuPos == 2) {
+							tela = TELAS.AJUDA;
+							
+						}
+						else if (menuPos == 3) {
+							tela = TELAS.CREDITOS;
+						}
+						break;
+					case TELAS.ROLETA:
+						GirarRoleta();
+						break;
+					case TELAS.CONFIGURACOES:
+						menuPos = 1;
+						tela = TELAS.MENU;
+						break;
+					case TELAS.AJUDA:
+						menuPos = 2;
+						tela = TELAS.MENU;
+						break;
+					case TELAS.CREDITOS:
+						menuPos = 3;
+						tela = TELAS.MENU;
+						break;
+				}
+			break;
+			case 27:
+				switch (tela) {
+					case TELAS.CONFIGURACOES:
+						menuPos = 1;
+						tela = TELAS.MENU;
+					break;
+					case TELAS.AJUDA:
+						menuPos = 2;
+						tela = TELAS.MENU;
+						break;
+					case TELAS.CREDITOS:
+						menuPos = 3;
+						tela = TELAS.MENU;
+						break;
+				}
+			break;
+			case 37: //<
+				switch (tela) {
+					case TELAS.CONFIGURACOES:
+						somLigado = !somLigado;
+						break;
+				}
+			break;
+			case 38:
+				switch (tela) {
+						case TELAS.MENU:
+							menuPos--;
+							if (menuPos < 0) menuPos = 3;
+						break;
+				}
+			break;
+			case 39: //>
+				switch (tela) {
+					case TELAS.CONFIGURACOES:
+						somLigado = !somLigado;
+						break;
+				}
+			break;
+			case 40: //baixo
 			switch (tela) {
 				case TELAS.MENU:
-					if (menuPos == 0) {
-						tela = TELAS.ROLETA;
-					}
-					else if (menuPos == 1) {
-						tela = TELAS.CONFIGURACOES;
-					}
-					else if (menuPos == 2) {
-						tela = TELAS.AJUDA;
-						
-					}
-					else if (menuPos == 3) {
-						tela = TELAS.CREDITOS;
-					}
-					break;
-				case TELAS.ROLETA:
-					GirarRoleta();
-					break;
-				case TELAS.CONFIGURACOES:
-					menuPos = 1;
-					tela = TELAS.MENU;
-					break;
-				case TELAS.AJUDA:
-					menuPos = 2;
-					tela = TELAS.MENU;
-					break;
-				case TELAS.CREDITOS:
-					menuPos = 3;
-					tela = TELAS.MENU;
-					break;
-			}
-		break;
-		case 27:
-			switch (tela) {
-				case TELAS.CONFIGURACOES:
-					menuPos = 1;
-					tela = TELAS.MENU;
+					menuPos++;
+					if (menuPos > 3) menuPos = 0;
 				break;
-				case TELAS.AJUDA:
-					menuPos = 2;
-					tela = TELAS.MENU;
-					break;
-				case TELAS.CREDITOS:
-					menuPos = 3;
-					tela = TELAS.MENU;
-					break;
 			}
-		break;
-		case 37: //<
-			switch (tela) {
-				case TELAS.CONFIGURACOES:
-					somLigado = !somLigado;
-					break;
-			}
-		break;
-		case 38:
-			switch (tela) {
-					case TELAS.MENU:
-						menuPos--;
-						if (menuPos < 0) menuPos = 3;
-					break;
-			}
-		break;
-		case 39: //>
-			switch (tela) {
-				case TELAS.CONFIGURACOES:
-					somLigado = !somLigado;
-					break;
-			}
-		break;
-		case 40: //baixo
-		switch (tela) {
-			case TELAS.MENU:
-				menuPos++;
-				if (menuPos > 3) menuPos = 0;
 			break;
 		}
-		break;
 	}
 }
 
 function Tocou(evento) {
 	switch (tela) {
 		case TELAS.MENU:
-			tela = TELAS.ROLETA;
+			TrataToqueMenu(evento.clientX, evento.clientY);
+			//tela = TELAS.ROLETA;
 			break;
 		case TELAS.ROLETA:
 			GirarRoleta();
@@ -450,6 +501,16 @@ function Tocou(evento) {
 		case TELAS.PERGUNTA:
 			VerificaResposta(evento.clientX, evento.clientY);
 			break;
+	}
+}
+
+function TrataToqueMenu(x, y) {
+	var rect = canvas.getBoundingClientRect();
+	x = (x - rect.left) * (canvas.width/parseInt(canvas.style.width));
+	y = (y - rect.top) * (canvas.height/parseInt(canvas.style.height));
+	console.log(x, y);
+	if (x >= 10 && x <= 100 && y >= 550) {
+		tela = TELAS.SENHA;
 	}
 }
 

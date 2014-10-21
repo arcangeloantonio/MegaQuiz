@@ -1,3 +1,13 @@
+var categorias = {
+	Geografia: { id: 1, categoria: 'Geografia'},
+	Historia: { id: 2, categoria: 'História'},
+	Matematica: { id: 3, categoria: 'Matemática'},
+	Portugues: { id: 4, categoria: 'Português'},
+	Biologia: { id: 5, categoria: 'Biologia'},
+	Fisica: { id: 6, categoria: 'Física'},
+	Quimica: { id: 7, categoria: 'Química'},
+}
+
 var Editor = {
 	Iniciar: function() {
 		this.Eventos.Vincular();
@@ -9,6 +19,8 @@ var Editor = {
 			this.AoMudarCategoria();
 			this.AoSelecionarPergunta();
 			this.AoClicarSalvar();
+			this.AoClicarAdicionar();
+			this.AoClicarRemover();
 		},
 		CarregarCategorias: function() {
 			var inicio = '<option value="0">Selecione...</option>';
@@ -18,49 +30,65 @@ var Editor = {
 		},
 		AoMudarCategoria: function() {
 			$('#ddlCategorias').on('change', function() {
-				var categoriaId = $(this).val();
-				var listaPerguntas = '';
-				$('#groupPerguntas').empty();
-				$.each(perguntas, function( key, obj) {
-					if (obj.categoria.id == categoriaId) {
-						listaPerguntas += '<li  class="lnPergunta" data-perguntaid="' + obj.id + '">' + obj.questao + '</li>';
-					}
-				});
-				$('#groupPerguntas').append(listaPerguntas);
-				$('.lnPergunta').off()
-				Editor.Eventos.AoSelecionarPergunta();
+				Editor.Metodos.AtualizarLista();
 			});
 		},
 		AoSelecionarPergunta: function() {
 			$('.lnPergunta').on('click', function() {	
 				$('.lnPergunta.selecionado').removeClass('selecionado');
 				$(this).addClass('selecionado');
-				var perguntaId = $(this).attr('data-perguntaid');
-				$.each(perguntas, function(key, obj) {
-					if (obj.id == perguntaId) {
-						$('#txtEnunciado').val(obj.questao);
-						$('#txtTempo').val(obj.tempo);
-						$.each(obj.respostas, function(i, resposta) {
-							$('#txtResposta' + (i+1)).val(resposta);
-						});
-						$('#rdbResposta' + obj.respostaCerta).attr('checked', 'checked');
-						$('#ddlCategoria').val(obj.categoria.id);
-					}
-				});
+				var perguntaId = eval($(this).attr('data-perguntaid'));
+				
+				var obj = _.where(perguntas, {id: perguntaId})[0];
+				
+				$('#txtEnunciado').val(obj.questao);
+				$('#txtTempo').val(obj.tempo);
+				$.each(obj.respostas, function(i, resposta) { $('#txtResposta' + (i+1)).val(resposta);});
+				$('#rdbResposta' + obj.respostaCerta).attr('checked', 'checked');
+				$('#ddlCategoria').val(obj.categoriaId);
+				$('#spnRemove').css('visibility', 'visible');
+			});
+		},
+		AoClicarAdicionar: function() {
+			$('#spnAdd').on('click', function() {
+				Editor.Metodos.LimparCampos();
+			});
+		},
+		AoClicarRemover: function() {
+			$('#spnRemove').on('click', function() {
+				var perguntaId = eval($('.lnPergunta.selecionado').attr('data-perguntaid'));
+				perguntas = _.without(perguntas, _.findWhere(perguntas, { id: perguntaId }));
+				Editor.Metodos.LimparCampos();
+				Editor.Metodos.AtualizarLista();
+				$('#spnRemove').css('visibility', 'hidden');
 			});
 		},
 		AoClicarSalvar: function() {
 			$('#btnSalvar').on('click', function() {
 				Editor.Metodos.saveTextAsFile();
-				// var data = JSON.stringify(perguntas);
-				// var url = 'data:text/json;charset=utf8,' + encodeURIComponent(data);
-				// window.open(url);
-				// window.focus();
-				//window.open("data:text/json;charset=utf-8," + JSON.stringify(perguntas));
 			});
 		}
 	},
 	Metodos: {
+		LimparCampos: function() {
+			$('#txtEnunciado').val('');
+			$('#txtTempo').val('');
+			$('.txtResposta').val('');
+			$('[name="rdbResposta"]').attr('checked', false);
+		},
+		AtualizarLista: function() {
+			var categoriaId = eval($('#ddlCategorias').val());
+			var listaPerguntas = '';
+			$('#groupPerguntas').empty();			
+			$.each(perguntas, function( key, obj) {
+				if (obj.categoriaId == categoriaId) {
+					listaPerguntas += '<li  class="lnPergunta" data-perguntaid="' + obj.id + '">' + obj.questao + '</li>';
+				}
+			});
+			$('#groupPerguntas').append(listaPerguntas);
+			$('.lnPergunta').off();
+			Editor.Eventos.AoSelecionarPergunta();
+		},
 		PreencherCategorias: function() {
 			var html = '';
 			$.each(categorias, function( key, obj) {
@@ -70,49 +98,22 @@ var Editor = {
 		},
 		saveTextAsFile: function()
 		{      
-		// grab the content of the form field and place it into a variable
 			var textToWrite = JSON.stringify(perguntas);
-		//  create a new Blob (html5 magic) that conatins the data from your form feild
 			var textFileAsBlob = new Blob([textToWrite], {type:'text/plain'});
-		// Specify the name of the file to be saved
 			var fileNameToSaveAs = "perguntas.json";
-			
-		// Optionally allow the user to choose a file name by providing 
-		// an imput field in the HTML and using the collected data here
-		// var fileNameToSaveAs = txtFileName.text;
-		
-		// create a link for our script to 'click'
 			var downloadLink = document.createElement("a");
-		//  supply the name of the file (from the var above).
-		// you could create the name here but using a var
-		// allows more flexability later.
 			downloadLink.download = fileNameToSaveAs;
-		// provide text for the link. This will be hidden so you
-		// can actually use anything you want.
 			downloadLink.innerHTML = "My Hidden Link";
-			
-		// allow our code to work in webkit & Gecko based browsers
-		// without the need for a if / else block.
 			window.URL = window.URL || window.webkitURL;
-				
-		// Create the link Object.
 			downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
-		// when link is clicked call a function to remove it from
-		// the DOM in case user wants to save a second file.
 			downloadLink.onclick = Editor.Metodos.destroyClickedElement;
-		// make sure the link is hidden.
 			downloadLink.style.display = "none";
-		// add the link to the DOM
 			document.body.appendChild(downloadLink);
-			
-		// click the new link
 			downloadLink.click();
 		},
 		destroyClickedElement: function(event)
 		{
-		// remove the link from the DOM
 			document.body.removeChild(event.target);
 		}
-		// EOF
 	}
 }
