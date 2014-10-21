@@ -217,6 +217,7 @@ function Roleta() {
 		var graus = this.anguloInicio * 180 / Math.PI + 90;
 		var arcd = this.arco * 180 / Math.PI;
 		var index = Math.floor((360 - graus % 360) / arcd);
+		pergunta = new Pergunta(perguntas[Math.floor(Math.random() * perguntas.length)]);
 		setInterval(function() { tela = TELAS.PERGUNTA}, 500);
 	    this.materiaSelecionada = this.materias[index];
 		if (somLigado) { 
@@ -232,24 +233,28 @@ function Roleta() {
 	}
 }
 
-function Pergunta() {
+function Pergunta(perguntaSelecionada) {
+	
 	this.DesenharHUD = function() {
-		LimparCanvas();
-		context.fillStyle = "#000000";
-		context.fillRect(0, 0, screenWidth, screenHeight);
-		this.DesenharCabecalho(roleta.materiaSelecionada);
-		this.DesenharPergunta(this.LETRAPERGUNTA.A, 'Resposta A');
-		this.DesenharPergunta(this.LETRAPERGUNTA.B, 'Resposta B');
-		this.DesenharPergunta(this.LETRAPERGUNTA.C, 'Resposta C');
-		this.DesenharPergunta(this.LETRAPERGUNTA.D, 'Resposta D');
+		if (perguntaSelecionada !== undefined) {
+			LimparCanvas();
+			context.fillStyle = "#000000";
+			context.fillRect(0, 0, screenWidth, screenHeight);
+			this.DesenharCabecalho(roleta.materiaSelecionada, perguntaSelecionada.questao);
+			this.DesenharPergunta(this.LETRAPERGUNTA.A, perguntaSelecionada.respostas[0]);
+			this.DesenharPergunta(this.LETRAPERGUNTA.B, perguntaSelecionada.respostas[1]);
+			this.DesenharPergunta(this.LETRAPERGUNTA.C, perguntaSelecionada.respostas[2]);
+			this.DesenharPergunta(this.LETRAPERGUNTA.D, perguntaSelecionada.respostas[3]);
+			this.DesenharPergunta(this.LETRAPERGUNTA.E, perguntaSelecionada.respostas[4]);
+		}
 	}
 	
-	this.DesenharCabecalho = function(materia) {
+	this.DesenharCabecalho = function(materia, enunciado) {
 		context.fillStyle = "#FF0000";
-		context.fillRect(50, 50, screenWidth - 100, 200);
+		context.fillRect(50, 50, screenWidth - 100, 150);
 		context.fillStyle = "#FFFFFF";
 		context.font="30px Georgia";
-		context.fillText(materia, 60, 90);
+		context.fillText(materia + ' - ' + enunciado, 60, 90);
 	}
 	
 	this.quadradoInicioX = 50;
@@ -258,10 +263,15 @@ function Pergunta() {
 	this.distanciaFonteQuadrado = -30
 	
 	this.LETRAPERGUNTA = {
-		A: { texto: 'A', altura: 305 },
-		B: { texto: 'B', altura: 380 },
-		C: { texto: 'C', altura: 455 },
-		D: { texto: 'D', altura: 530 },
+		A: { texto: 'A', altura: 255 },
+		B: { texto: 'B', altura: 330 },
+		C: { texto: 'C', altura: 405 },
+		D: { texto: 'D', altura: 480 },
+		E: { texto: 'E', altura: 560 },
+	}
+	
+	if (perguntaSelecionada !== undefined) {
+		this.respostaCerta = perguntaSelecionada.respostaCerta;
 	}
 	
 	this.DesenharPergunta = function(letraPergunta, texto) {
@@ -289,14 +299,11 @@ function AoCarregar() {
 	}
 }
 
-function CarregarJogo() {	
-	window.addEventListener('load', function() {document.body.requestFullscreen();}, false);
-	window.addEventListener('resize', redimensionar, false);
-	window.addEventListener('orientationchange', redimensionar, false);
+function CarregarJogo() {
 	somLigado = true;
 	
 	canvas = document.getElementById('telaDeFundo');
-	redimensionar();
+	
 	document.addEventListener("keydown", KeyPress);
 	canvas.addEventListener("touchstart", Tocou, false);
 	canvas.addEventListener("click", Tocou, false);
@@ -322,15 +329,8 @@ function CarregarJogo() {
 	setInterval(AtualizarDesenhar, 1000/60);
 }
 
-function redimensionar() {
-	var alturaNavegador = window.innerHeight;
-	var razao = canvas.width/canvas.height;
-	var larguraNavegador = alturaNavegador * razao;
-	canvas.style.width = larguraNavegador+'px';
-	canvas.style.height = alturaNavegador+'px';
-}
-
 function AtualizarDesenhar() {
+	
 	switch (tela) {
 		case TELAS.MENU: 
 			menu.Desenhar();
@@ -455,16 +455,22 @@ function Tocou(evento) {
 
 function VerificaResposta(x, y) {	
 	var rect = canvas.getBoundingClientRect();
-	x = (x - rect.left) * (canvas.width/parseInt(canvas.style.width));
-	y = (y - rect.top) * (canvas.height/parseInt(canvas.style.height));
 	for (var p in pergunta.LETRAPERGUNTA) {
 		var perguntaDaVez = pergunta.LETRAPERGUNTA[p];
 		if (x >= pergunta.quadradoInicioX && x <= pergunta.quadradoLargura+pergunta.quadradoInicioX && y >= perguntaDaVez.altura+pergunta.distanciaFonteQuadrado && y <= pergunta.quadradoAltura+perguntaDaVez.altura+pergunta.distanciaFonteQuadrado) {
-			if (p === 'A' && somLigado) {
+			if (p === pergunta.respostaCerta && somLigado) {
 				somAcerto.play();
+				menu = new Menu();
+				roleta = new Roleta();
+				pergunta = new Pergunta();
+				tela = TELAS.ROLETA;
 			}
-			if (p === 'C' && somLigado) {
+			else {
 				somErro.play();
+				menu = new Menu();
+				roleta = new Roleta();
+				pergunta = new Pergunta();
+				tela = TELAS.MENU;
 			}
 		}
 	}

@@ -8,22 +8,75 @@ categorias = {
 	Quimica: { id: 7, categoria: 'Química'},
 }
 
-perguntas = [{
-	id: 1,
-	questao: 'blablabla',
-	respostas: ['resposta1','resposta2','resposta3','resposta4', 'resposta5'],
-	respostaCerta: 1,
-	tempo: 90,
-	linkAjuda: 'www.blablabla.com',
-	categoria: categorias.Geografia,
-	respondida: false
-	},  {
-	id: 2,
-	questao: 'blablabla2',
-	respostas: ['resposta1','resposta2','resposta3','resposta4', 'resposta5'],
-	respostaCerta: 1,
-	tempo: 30,
-	linkAjuda: 'www.blablabla2.com',
-	categoria: categorias.Matematica,
-	respondida: false
-}];
+perguntas = [
+	{
+		id: 1,
+		questao: 'blablabla1',
+		respostas: ['resposta1a','resposta1b','resposta1c','resposta1d', 'resposta1e'],
+		respostaCerta: 'A',
+		tempo: 30,
+		linkAjuda: 'www.blablabla.com',
+		categoria: 1,
+		respondida: false
+	},
+	{
+		id: 2,
+		questao: 'blablabla2',
+		respostas: ['resposta2a','resposta2b','resposta2c','resposta2d', 'resposta2e'],
+		respostaCerta: 'A',
+		tempo: 30,
+		linkAjuda: 'www.blablabla2.com',
+		categoria: 2,
+		respondida: false
+	},
+	{
+		id: 3,
+		questao: 'blablabla3',
+		respostas: ['resposta3a','resposta3b','resposta3c','resposta3d', 'resposta3e'],
+		respostaCerta: 'A',
+		tempo: 30,
+		linkAjuda: 'www.blablabla3.com',
+		categoria: 3,
+		respondida: false
+	},
+	{
+		id: 4,
+		questao: 'blablabla4',
+		respostas: ['resposta4a','resposta4b','resposta4c','resposta4d', 'resposta4e'],
+		respostaCerta: 'A',
+		tempo: 30,
+		linkAjuda: 'www.blablabla4.com',
+		categoria: 4,
+		respondida: false
+	},
+	{
+		id: 5,
+		questao: 'blablabla5',
+		respostas: ['resposta5a','resposta5b','resposta5c','resposta5d', 'resposta5e'],
+		respostaCerta: 'A',
+		tempo: 30,
+		linkAjuda: 'www.blablabla5.com',
+		categoria: 5,
+		respondida: false
+	},
+	{
+		id: 6,
+		questao: 'blablabla6',
+		respostas: ['resposta6a','resposta6b','resposta6c','resposta6d', 'resposta6e'],
+		respostaCerta: 'A',
+		tempo: 30,
+		linkAjuda: 'www.blablabla6.com',
+		categoria: 6,
+		respondida: false
+	},
+	{
+		id: 7,
+		questao: 'blablabla7',
+		respostas: ['resposta7a','resposta7b','resposta7c','resposta7d', 'resposta7e'],
+		respostaCerta: 'A',
+		tempo: 30,
+		linkAjuda: 'www.blablabla7.com',
+		categoria: 7,
+		respondida: false
+	}
+];
