@@ -387,7 +387,6 @@ function AtualizarDesenhar() {
 }
 
 function KeyPress(evento) {
-	console.log(evento);
 	if (tela == TELAS.SENHA) {
 		if (evento.keyCode == 8) {
 			evento.preventDefault();
@@ -397,7 +396,6 @@ function KeyPress(evento) {
 			//mudatela
 		}
 		else {
-			console.log((eval(evento.shiftKey)));
 			var digitado = String.fromCharCode(event.which);
 			digitado = evento.shiftKey ? digitado.toUpperCase() : digitado.toLowerCase();
 			senha.Texto += digitado;
@@ -506,10 +504,8 @@ function Tocou(evento) {
 
 function TrataToqueMenu(x, y) {
 	var rect = canvas.getBoundingClientRect();
-	x = (x - rect.left) * (canvas.width/parseInt(canvas.style.width));
-	y = (y - rect.top) * (canvas.height/parseInt(canvas.style.height));
-	console.log(x, y);
-	if (x >= 10 && x <= 100 && y >= 550) {
+	if (x >= 10 && x <= 545 && y >= 480) {
+		console.log('oi');
 		tela = TELAS.SENHA;
 	}
 }

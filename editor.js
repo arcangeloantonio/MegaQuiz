@@ -21,6 +21,7 @@ var Editor = {
 			this.AoClicarSalvar();
 			this.AoClicarAdicionar();
 			this.AoClicarRemover();
+			this.AoClicarBotaoAdicionar();
 		},
 		CarregarCategorias: function() {
 			var inicio = '<option value="0">Selecione...</option>';
@@ -67,6 +68,47 @@ var Editor = {
 			$('#btnSalvar').on('click', function() {
 				Editor.Metodos.saveTextAsFile();
 			});
+		},
+		AoClicarBotaoAdicionar: function() {
+			$('#btnAdicionar').on('click', function() {
+				var enunciado = $('#txtEnunciado').val();
+				var categoriaId = eval($('#ddlCategoria').val());
+				var dificuldade = $('#ddlDificuldade').val();
+				var tempo = $('#txtTempo').val();
+				var resposta1 = $('#txtResposta1').val();
+				var resposta2 = $('#txtResposta2').val();
+				var resposta3 = $('#txtResposta3').val();
+				var resposta4 = $('#txtResposta4').val();
+				var resposta5 = $('#txtResposta5').val();
+				
+				var respostaCerta = $('[name="rdbResposta"]:checked').attr('id');
+				
+				if (enunciado.length === 0) return alert('Digite um enunciado');
+				if (tempo.length === 0) return alert('Digite um tempo');
+				if (resposta1.length === 0) return alert('Digite a resposta A');
+				if (resposta2.length === 0) return alert('Digite a resposta B');
+				if (resposta3.length === 0) return alert('Digite a resposta C');
+				if (resposta4.length === 0) return alert('Digite a resposta D');
+				if (resposta5.length === 0) return alert('Digite a resposta E');
+				if (respostaCerta === undefined) return alert('Selecione uma resposta certa!');
+				
+				var respostaCerta = respostaCerta.split('rdbResposta')[1];
+
+				var novaPergunta = {
+						id: 99,
+						questao: enunciado,
+						respostas: [resposta1, resposta2, resposta3, resposta4, resposta5],
+						respostaCerta: respostaCerta,
+						tempo: tempo,
+						linkAjuda: 'www.blablabla2.com',
+						categoriaId: categoriaId,
+						respondida: false
+				}
+				perguntas.push(novaPergunta);
+				Editor.Metodos.LimparCampos();
+				Editor.Metodos.AtualizarLista();
+				alert('Pergunta adicionada com sucesso!');
+			});
 		}
 	},
 	Metodos: {
@@ -98,7 +140,7 @@ var Editor = {
 		},
 		saveTextAsFile: function()
 		{      
-			var textToWrite = JSON.stringify(perguntas);
+			var textToWrite = 'var perguntas = ' + JSON.stringify(perguntas);
 			var textFileAsBlob = new Blob([textToWrite], {type:'text/plain'});
 			var fileNameToSaveAs = "perguntas.json";
 			var downloadLink = document.createElement("a");

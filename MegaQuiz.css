@@ -130,10 +130,20 @@
 	padding-top:1px;
 }
 
-#containerBotao {
-	margin-top:300px;
+#containerBotaoAdicionar {
 	text-align:right;
 	padding-right:80px;
+}
+
+#btnAdicionar {
+	margin-top:30px;
+}
+
+#containerBotao {
+	padding-right:80px;
+	margin-top:20px;
+	text-align:right;
+	
 }
 
 .containerInput > label.labelInput {
