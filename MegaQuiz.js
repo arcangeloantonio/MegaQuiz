@@ -20,6 +20,8 @@ var TELAS = {
 	SENHA: 6
 };
 
+var pontos = 0;
+
 var tela = 0;
 
 var somAcerto;
@@ -36,6 +38,10 @@ var tecla = {
 	DIREITA: 39,
 	BAIXO: 40
 }
+
+var fundo = new Image();
+var certo = new Image();
+var errado = new Image();
 
 function desenharFonteCentro(texto, y, tamanhoFonte, cor) {					
 	context.font= tamanhoFonte + "px Georgia";
@@ -96,8 +102,8 @@ function Menu() {
 			case tecla.ENTER:
 				tela = this.posicao;
 			break;
-		}
-	}
+		};
+	};
 }
 
 function Configuracoes() {
@@ -107,33 +113,31 @@ function Configuracoes() {
 		desenharJanelaTela();		
 		var textoSom = somLigado ? "LIGADO" : "DESLIGADO";
 		desenharFonteCentro("Configurações", 235, 30, '#FF0000');
-		desenharFonteCentro("Som < " + textoSom + " >", 300, 30, this.posicao == 1 ? '#FFFFFF' : '#FF0000');
-		desenharFonteCentro("Editor de Perguntas", 350, 30, this.posicao == 2 ? '#FFFFFF' : '#FF0000');
+		desenharFonteCentro("Som < " + textoSom + " >", 300, 30, this.posicao == 1 ? '#FF0000' : '#FFFFFF');
+		desenharFonteCentro("Editor de Perguntas", 350, 30, this.posicao == 2 ? '#FF0000' : '#FFFFFF');
 	};
 	this.Controles = function(evento) {
 		switch (evento.keyCode) {
 			case tecla.ENTER: 
 				if (this.posicao == 2) tela = TELAS.SENHA;
-				break;
+			break;
 			case tecla.ESC:
 				menu.posicao = TELAS.CONFIGURACOES;
 				tela = TELAS.MENU;
-				break;
+			break;
 			case tecla.DIREITA:
 				if (this.posicao == 1) somLigado = !somLigado;
-				break;
+			break;
 			case tecla.ESQUERDA:
 				if (this.posicao == 1) somLigado = !somLigado;
-				break;
 			break;
 			case tecla.BAIXO:
 				if (this.posicao < 2) this.posicao++;
-				break;
 			break;
 			case tecla.CIMA:
 				if (this.posicao > 1) this.posicao--;
-				break;
-		}
+			break;
+		};
 	};
 }
 
@@ -150,7 +154,7 @@ function Ajuda() {
 				menu.posicao = TELAS.AJUDA;
 				tela = TELAS.MENU;
 			break;
-		}
+		};
 	};
 }
 
@@ -172,6 +176,10 @@ function Senha() {
 				$('#jogo').hide();
 				$('#editarPerguntas').show();
 			}
+		}
+		else if (evento.keyCode === tecla.ESC) {			
+			configuracoes.posicao = 2;
+			tela = TELAS.CONFIGURACOES;
 		}
 		else {
 			var digitado = String.fromCharCode(event.which);
@@ -196,7 +204,7 @@ function Creditos() {
 				menu.posicao = TELAS.CREDITOS;
 				tela = TELAS.MENU;
 			break;
-		}
+		};
 	};
 }
 
@@ -222,6 +230,7 @@ function Roleta() {
 	this.Desenhar = function() {      
 		LimparCanvas();
       
+		context.drawImage(fundo, 0, 0);
 		context.strokeStyle = "#000000";
 		context.lineWidth = 2;
 		context.font = 'bold 12px sans-serif';
@@ -246,7 +255,11 @@ function Roleta() {
 			context.restore();
 		} 
 		this.DesenharSeta();
-	}
+		context.font = 'bold 30px sans-serif';
+		context.fillStyle = "#FF0000";
+		var pontuacao = "Pontos: " + pontos;
+		context.fillText(pontuacao, screenWidth-context.measureText(pontuacao).width-10, screenHeight-10);
+	};
 	
 	this.DesenharSeta = function() {
 		context.fillStyle = "#FF0000";
@@ -260,13 +273,13 @@ function Roleta() {
 		context.lineTo(400 - 14, 300 - (this.raioFora - 15));
 		context.lineTo(400 - 14, 300 - (this.raioFora + 25));
 		context.fill();
-	}
+	};
 	
 	this.Girar = function()  {
-		this.anguloGiroInicio = Math.random() * 10 + 10;
+		this.anguloGiroInicio = Math.random() * 10 + 15;
 		this.tempoGiroTotal = Math.random() * 3 + 4 * 1000;
 		this.GirarRoleta();
-	}
+	};
   
 	this.GirarRoleta = function() {
 		if (somLigado) somRoleta.play();
@@ -279,7 +292,7 @@ function Roleta() {
 		this.anguloInicio += (anguloGiro * Math.PI / 180);
 		this.Desenhar();
 		spinTimeout = setTimeout('roleta.GirarRoleta()', 5);
-	}
+	};
   
 	this.PararDeGirarRoleta = function() {
 		var graus = this.anguloInicio * 180 / Math.PI + 90;
@@ -287,69 +300,113 @@ function Roleta() {
 		var index = Math.floor((360 - graus % 360) / arcd);
 		pergunta = new Pergunta(perguntas[Math.floor(Math.random() * perguntas.length)]);
 		tela = TELAS.PERGUNTA;
-		//setTimeout(function() { tela = TELAS.PERGUNTA}, 500);
+		setTimeout(function() { tela = TELAS.PERGUNTA}, 500);
 	    this.materiaSelecionada = this.materias[index];
 		if (somLigado) { 
 			somRoleta.pause();
 			somRoleta.currentTime = 0.0;
 		}
-	}
+	};
   
 	this.Transicao = function(t, b, c, d) {
 		var ts = (t/=d)*t;
 		var tc = ts*t;
 		return b+c*(tc + -3*ts + 3*t);
-	}
+	};
+	
+	this.Controles = function(evento) {
+		switch (evento.keyCode) {
+			case (tecla.ENTER):
+				this.Girar();
+			break;
+		};
+	};
 }
 
 function Pergunta(perguntaSelecionada) {
+	this.respondeu = false;
+	this.acertou = false;
 	this.DesenharHUD = function() {
 		if (perguntaSelecionada !== undefined) {
 			LimparCanvas();
-			context.fillStyle = "#000000";
-			context.fillRect(0, 0, screenWidth, screenHeight);
-			this.DesenharCabecalho(roleta.materiaSelecionada, perguntaSelecionada.questao);
-			this.DesenharPergunta(this.LETRAPERGUNTA.A, perguntaSelecionada.respostas[0]);
-			this.DesenharPergunta(this.LETRAPERGUNTA.B, perguntaSelecionada.respostas[1]);
-			this.DesenharPergunta(this.LETRAPERGUNTA.C, perguntaSelecionada.respostas[2]);
-			this.DesenharPergunta(this.LETRAPERGUNTA.D, perguntaSelecionada.respostas[3]);
-			this.DesenharPergunta(this.LETRAPERGUNTA.E, perguntaSelecionada.respostas[4]);
+			context.drawImage(fundo, 0, 0);
+			
+			if (this.respondeu) {
+				if (this.acertou) {
+					context.drawImage(certo, 0, 0);
+				}
+				else {
+					context.drawImage(errado, 0, 0);
+				}
+			}
+			else {
+				this.DesenharCabecalho(roleta.materiaSelecionada, perguntaSelecionada.questao);
+				this.DesenharPergunta(this.LETRAPERGUNTA.A, perguntaSelecionada.respostas[0]);
+				this.DesenharPergunta(this.LETRAPERGUNTA.B, perguntaSelecionada.respostas[1]);
+				this.DesenharPergunta(this.LETRAPERGUNTA.C, perguntaSelecionada.respostas[2]);
+				this.DesenharPergunta(this.LETRAPERGUNTA.D, perguntaSelecionada.respostas[3]);
+				this.DesenharPergunta(this.LETRAPERGUNTA.E, perguntaSelecionada.respostas[4]);
+			}
 			console.log(this.respostaCerta);
 		}
-	}
+	};
 	
 	this.DesenharCabecalho = function(materia, enunciado) {
-		context.fillStyle = "#FF0000";
-		context.fillRect(50, 50, screenWidth - 100, 150);
+		context.fillStyle = "#000000";
+		context.fillRect(50, 10, screenWidth - 100, 150);
 		context.fillStyle = "#FFFFFF";
 		context.font="30px Georgia";
-		context.fillText(materia + ' - ' + enunciado, 60, 90);
-	}
+		context.fillText(materia + ' - ' + enunciado, 60, 40);
+	};
 	
 	this.quadradoInicioX = 50;
-	this.quadradoAltura = 50;
+	this.quadradoAltura = 70;
 	this.quadradoLargura = screenWidth - 100;
 	this.distanciaFonteQuadrado = -30
 	
 	this.LETRAPERGUNTA = {
-		A: { texto: 'A', valor: 1, altura: 255 },
-		B: { texto: 'B', valor: 2, altura: 330 },
-		C: { texto: 'C', valor: 3, altura: 405 },
-		D: { texto: 'D', valor: 4, altura: 480 },
-		E: { texto: 'E', valor: 5, altura: 560 },
-	}
+		A: { texto: 'A', valor: 1, altura: 210 },
+		B: { texto: 'B', valor: 2, altura: 295 },
+		C: { texto: 'C', valor: 3, altura: 380 },
+		D: { texto: 'D', valor: 4, altura: 465 },
+		E: { texto: 'E', valor: 5, altura: 550 },
+	};
 	
 	if (perguntaSelecionada !== undefined) {
 		this.respostaCerta = perguntaSelecionada.respostaCerta;
-	}
+	};
 	
 	this.DesenharPergunta = function(letraPergunta, texto) {
-		context.fillStyle = "#FF0000";
+		context.fillStyle = "#000000";
 		context.fillRect(this.quadradoInicioX, letraPergunta.altura+this.distanciaFonteQuadrado, this.quadradoLargura, this.quadradoAltura);
 		
 		context.fillStyle = "#FFFFFF";
 		context.font="20px Georgia";
 		context.fillText(texto, 60, letraPergunta.altura);
+	};
+	
+	this.VerificaResposta = function(x, y) {	
+		var rect = canvas.getBoundingClientRect();
+		for (var p in this.LETRAPERGUNTA) {
+			var perguntaDaVez = this.LETRAPERGUNTA[p];
+			if (x >= this.quadradoInicioX && x <= this.quadradoLargura+this.quadradoInicioX && y >= perguntaDaVez.altura+this.distanciaFonteQuadrado && y <= this.quadradoAltura+perguntaDaVez.altura+this.distanciaFonteQuadrado) {
+				roleta = new Roleta();
+				if (perguntaDaVez.valor === this.respostaCerta && somLigado) {
+					somAcerto.play();
+					this.respondeu = true;
+					this.acertou = true;
+					pontos += 10;
+					setTimeout(function() { tela = TELAS.ROLETA; }, 2000);
+				}
+				else {
+					this.respondeu = true;
+					this.acertou = false;
+					somErro.play();
+					pontos = 0;
+					setTimeout(function() { tela = TELAS.MENU; }, 2000);
+				}
+			}
+		}
 	}
 }
 
@@ -366,12 +423,14 @@ function CarregarJogo() {
 	canvas.addEventListener("touchstart", Tocou, false);
 	canvas.addEventListener("click", Tocou, false);
 	context = canvas.getContext('2d');
-
 	
 	somAcerto = new Audio("Acerto.mp3");
 	somRoleta = new Audio("Roleta.mp3");
 	somErro = new Audio("Erro.mp3");
 	
+	fundo.src = "img/fundo.png";
+	certo.src = "img/certo.png";
+	errado.src = "img/errado.png";
 	
 	screenWidth = canvas.width;
 	screenHeight = canvas.height;
@@ -385,31 +444,32 @@ function CarregarJogo() {
 	senha = new Senha();
 	
 	tela = TELAS.MENU;
-	setInterval(AtualizarDesenhar, 1000/60);
+	setInterval(Atualizar, 1000/60);
 }
 
-function AtualizarDesenhar() {
+function Atualizar() {
 	switch (tela) {
 		case TELAS.MENU: 
 			menu.Desenhar();
-			break;
+		break;
 		case TELAS.ROLETA:
 			roleta.Desenhar();
-			break;
+		break;
 		case TELAS.PERGUNTA:
 			pergunta.DesenharHUD();
-			break;
+		break;
 		case TELAS.CONFIGURACOES:
 			configuracoes.Desenhar();
-			break;
+		break;
 		case TELAS.CREDITOS:
 			creditos.Desenhar();
-			break;
+		break;
 		case TELAS.AJUDA:
 			ajuda.Desenhar();
-			break;
+		break;
 		case TELAS.SENHA:
 			senha.Desenhar();
+		break;
 	}
 }
 
@@ -427,8 +487,12 @@ function KeyPress(evento) {
 		case TELAS.AJUDA:
 			ajuda.Controles(evento);
 		break;
+		case TELAS.ROLETA:
+			roleta.Controles(evento);
+		break;
 		case TELAS.SENHA:
 			senha.Controles(evento);
+		break;
 	}
 }
 
@@ -440,34 +504,12 @@ function Tocou(evento) {
 		case TELAS.MENU:
 			//TrataToqueMenu(x, y);
 			//tela = TELAS.ROLETA;
-			break;
+		break;
 		case TELAS.ROLETA:
-			GirarRoleta();
-			break;
+			roleta.Girar();
+		break;
 		case TELAS.PERGUNTA:
-			VerificaResposta(x, y);
-			break;
+			pergunta.VerificaResposta(x, y);
+		break;
 	}
-}
-
-function VerificaResposta(x, y) {	
-	var rect = canvas.getBoundingClientRect();
-	for (var p in pergunta.LETRAPERGUNTA) {
-		var perguntaDaVez = pergunta.LETRAPERGUNTA[p];
-		if (x >= pergunta.quadradoInicioX && x <= pergunta.quadradoLargura+pergunta.quadradoInicioX && y >= perguntaDaVez.altura+pergunta.distanciaFonteQuadrado && y <= pergunta.quadradoAltura+perguntaDaVez.altura+pergunta.distanciaFonteQuadrado) {
-			roleta = new Roleta();
-			if (perguntaDaVez.valor === pergunta.respostaCerta && somLigado) {
-				somAcerto.play();
-				tela = TELAS.ROLETA;
-			}
-			else {
-				somErro.play();
-				tela = TELAS.MENU;
-			}
-		}
-	}
-}
-
-function GirarRoleta() {
-	roleta.Girar(); //TODO VERIFICAR SE A ROLETA JA ESTA GIRANDO
 }
