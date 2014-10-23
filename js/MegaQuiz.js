@@ -495,7 +495,11 @@ function Roleta() {
 		var graus = this.anguloInicio * 180 / Math.PI + 90;
 		var arcd = this.arco * 180 / Math.PI;
 		var index = Math.floor((360 - graus % 360) / arcd);
-		pergunta = new Pergunta(perguntas[Math.floor(Math.random() * perguntas.length)]);
+		
+		var materiaId =  _.findWhere(categorias, { categoria: this.materias[index] }).id;
+		var perguntasParaSortear =  _.where(perguntas, {categoriaId: materiaId});
+		
+		pergunta = new Pergunta(perguntasParaSortear[Math.floor(Math.random() * perguntasParaSortear.length)]);
 		setTimeout(function() { tela = TELAS.PERGUNTA}, 2000);
 		this.parada = true;
 	    this.materiaSelecionada = this.materias[index];
