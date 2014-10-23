@@ -92,8 +92,8 @@ function CarregarJogo() {
 }
 
 function Perdeu() {
-	this.respondeu = true;
-	this.acertou = false;
+	pergunta.respondeu = true;
+	pergunta.acertou = false;
 	somErro.play();
 	pontos = 0;
 	setTimeout(function() { tela = TELAS.MENU; }, 2000);
@@ -274,10 +274,10 @@ function Configuracoes() {
 				tela = TELAS.MENU;
 			break;
 			case tecla.DIREITA:
-				if (this.posicao == 1) somLigado = !somLigado;
+				if (this.posicao == 1) this.ConfigurarSom();
 			break;
 			case tecla.ESQUERDA:
-				if (this.posicao == 1) somLigado = !somLigado;
+				if (this.posicao == 1) this.ConfigurarSom();
 			break;
 			case tecla.BAIXO:
 				if (this.posicao < 2) this.posicao++;
@@ -286,6 +286,24 @@ function Configuracoes() {
 				if (this.posicao > 1) this.posicao--;
 			break;
 		};
+	};
+	this.ConfigurarSom = function() {
+		somLigado = !somLigado;
+		if (somLigado) {
+			somIntro.play();
+		}
+		else {
+			somIntro.pause();
+			if (somIntro.currentTime !== 0) somIntro.currentTime = 0;
+			somPergunta.pause();
+			if (somPergunta.currentTime !== 0) somPergunta.currentTime = 0;
+			somAcerto.pause();
+			if (somAcerto.currentTime !== 0) somAcerto.currentTime = 0;
+			somErro.pause();
+			if (somErro.currentTime !== 0) somErro.currentTime = 0;
+			somRoleta.pause();
+			if (somRoleta.currentTime !== 0) somRoleta.currentTime = 0;
+		}
 	};
 }
 
@@ -507,7 +525,6 @@ function Pergunta(perguntaSelecionada) {
 			this.frames++;
 			LimparCanvas();
 			context.drawImage(fundo, 0, 0);
-			
 			if (this.respondeu) {
 				if (this.acertou) {
 					context.drawImage(certo, 0, 0);
