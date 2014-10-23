@@ -128,6 +128,7 @@ var Editor = {
 			$('#txtTempo').val('');
 			$('.txtResposta').val('');
 			$('[name="rdbResposta"]').attr('checked', false);
+			$('#containerPerguntas').removeAttr('data-idPergunta')
 		},
 		AtualizarLista: function() {
 			var categoriaId = eval($('#ddlCategorias').val());
