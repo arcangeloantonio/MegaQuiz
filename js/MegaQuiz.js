@@ -46,6 +46,7 @@ var opcoes = new Image();
 var fundo = new Image();
 var certo = new Image();
 var errado = new Image();
+var imgPergunta = new Image();
 var imgFisica = new Image();
 var imgBiologia = new Image();
 
@@ -72,6 +73,7 @@ function CarregarJogo() {
 	certo.src = "conteudo/img/certo.png";
 	errado.src = "conteudo/img/errado.png";
 	intro.src = "conteudo/img/intro.png";
+	imgPergunta.src = "conteudo/img/pergunta.png"
 	opcoes.src = "conteudo/img/opcoes.png";
 	imgFisica.src = "conteudo/img/fisica.png";
 	imgBiologia.src = "conteudo/img/biologia.png";
@@ -96,7 +98,7 @@ function Perdeu() {
 	pergunta.acertou = false;
 	somErro.play();
 	pontos = 0;
-	setTimeout(function() { tela = TELAS.MENU; }, 2000);
+	setTimeout(function() { tela = TELAS.MENU; }, 1000);
 }
 
 function EntrarEditor() {
@@ -110,7 +112,7 @@ function EntrarEditor() {
 	Editor.Iniciar();
 }
 
-function QuebrarTexto(texto, x, y, larguraMaxima, alturaLinha) {
+function QuebrarTexto(texto, x, y, larguraMaxima, alturaLinha, tamanhoFonte) {
 	var palavras = texto.split(' ');
 	var linha = '';
 	for(var n = 0; n < palavras.length; n++) {
@@ -119,7 +121,7 @@ function QuebrarTexto(texto, x, y, larguraMaxima, alturaLinha) {
 		var larguraTeste = metricas.width;
 		if (larguraTeste > larguraMaxima && n > 0)
 		{
-			context.font="30px Georgia";
+			context.font= tamanhoFonte + "px Georgia";
 			context.fillText(linha, x, y);
 			linha = palavras[n] + ' ';
 			y += alturaLinha;
@@ -129,7 +131,7 @@ function QuebrarTexto(texto, x, y, larguraMaxima, alturaLinha) {
 			linha = linhaTeste;
 		}
 	}
-	context.font="30px Georgia";
+	context.font= tamanhoFonte + "px Georgia";
 	context.fillText(linha, x, y);
 }
 
@@ -360,7 +362,7 @@ function Ajuda() {
 		context.drawImage(opcoes, 0, 0);
 		desenharFonteCentro("Ajuda", 160, 30, '#000000');
 		var texto = "Gire a roleta e boa sorte! Seu objetivo é responder as perguntas de acordo com a matéria, e não se esqueça do tempo! Cada resposta certa acumulará pontos e no final será dado o Rank! Errou alguma resposta? não fique triste, daremos um link para você acessar e ficar por dentro daquele assunto!"
-		QuebrarTexto(texto, 120, 230, 600, 30);
+		QuebrarTexto(texto, 120, 230, 600, 30, 30);
 		
 		var bonsEstudos = "Bons estudos!";
 		context.font= "30 px Georgia";
@@ -500,7 +502,7 @@ function Roleta() {
 		var perguntasParaSortear =  _.where(perguntas, {categoriaId: materiaId});
 		
 		pergunta = new Pergunta(perguntasParaSortear[Math.floor(Math.random() * perguntasParaSortear.length)]);
-		setTimeout(function() { tela = TELAS.PERGUNTA}, 2000);
+		setTimeout(function() { tela = TELAS.PERGUNTA}, 1000);
 		this.parada = true;
 	    this.materiaSelecionada = this.materias[index];
 		if (somLigado) { 
@@ -533,7 +535,7 @@ function Pergunta(perguntaSelecionada) {
 		if (perguntaSelecionada !== undefined) {
 			this.frames++;
 			LimparCanvas();
-			context.drawImage(fundo, 0, 0);
+			context.drawImage(imgPergunta, 0, 0);
 			if (this.respondeu) {
 				if (this.acertou) {
 					context.drawImage(certo, 0, 0);
@@ -556,28 +558,26 @@ function Pergunta(perguntaSelecionada) {
 	
 	this.DesenharCabecalho = function(materia, enunciado) {
 		context.fillStyle = "#000000";
-		context.fillRect(50, 10, screenWidth - 100, 150);
-		context.fillStyle = "#FFFFFF";
-		QuebrarTexto(materia + ' - ' + enunciado, 60, 50, 400, 50)
+		QuebrarTexto(materia + ' - ' + enunciado, 60, 60, 550, 25, 25)
 		if (this.frames >= 60) {
 			this.tempo -= 1;
 			this.frames = 0;
 		}
 		context.font="20px Georgia";
-		context.fillText(this.tempo + (this.tempo == 1 ? " segundo" : " segundos"), 630, 150);
+		context.fillText(this.tempo + (this.tempo == 1 ? " segundo" : " segundos"), 630, 140);
 	};
 	
 	this.quadradoInicioX = 50;
-	this.quadradoAltura = 70;
+	this.quadradoAltura = 80;
 	this.quadradoLargura = screenWidth - 100;
-	this.distanciaFonteQuadrado = -30
+	this.distanciaFonteQuadrado = 0
 	
 	this.LETRAPERGUNTA = {
-		A: { texto: 'A', valor: 1, altura: 210 },
-		B: { texto: 'B', valor: 2, altura: 295 },
-		C: { texto: 'C', valor: 3, altura: 380 },
-		D: { texto: 'D', valor: 4, altura: 465 },
-		E: { texto: 'E', valor: 5, altura: 550 },
+		A: { texto: 'A', valor: 1, altura: 165 },
+		B: { texto: 'B', valor: 2, altura: 250 },
+		C: { texto: 'C', valor: 3, altura: 335 },
+		D: { texto: 'D', valor: 4, altura: 420 },
+		E: { texto: 'E', valor: 5, altura: 505 },
 	};
 	
 	if (perguntaSelecionada !== undefined) {
@@ -586,12 +586,12 @@ function Pergunta(perguntaSelecionada) {
 	};
 	
 	this.DesenharPergunta = function(letraPergunta, texto) {
-		context.fillStyle = "#000000";
-		context.fillRect(this.quadradoInicioX, letraPergunta.altura+this.distanciaFonteQuadrado, this.quadradoLargura, this.quadradoAltura);
+		//context.fillStyle = "#000000";
+		//context.fillRect(this.quadradoInicioX, letraPergunta.altura+this.distanciaFonteQuadrado, this.quadradoLargura, this.quadradoAltura);
 		
-		context.fillStyle = "#FFFFFF";
+		context.fillStyle = "#000000";
 		context.font="20px Georgia";
-		context.fillText(texto, 60, letraPergunta.altura);
+		context.fillText(texto, 60, letraPergunta.altura+30);
 	};
 	
 	this.VerificaResposta = function(x, y) {	
@@ -601,11 +601,12 @@ function Pergunta(perguntaSelecionada) {
 			if (x >= this.quadradoInicioX && x <= this.quadradoLargura+this.quadradoInicioX && y >= perguntaDaVez.altura+this.distanciaFonteQuadrado && y <= this.quadradoAltura+perguntaDaVez.altura+this.distanciaFonteQuadrado) {
 				roleta = new Roleta();
 				if (perguntaDaVez.valor === this.respostaCerta && somLigado) {
+					console.log('Acertou!', perguntaDaVez.valor);
 					somAcerto.play();
 					this.respondeu = true;
 					this.acertou = true;
 					pontos += 10;
-					setTimeout(function() { tela = TELAS.ROLETA; }, 2000);
+					setTimeout(function() { tela = TELAS.ROLETA; }, 1000);
 				}
 				else {
 					Perdeu();
