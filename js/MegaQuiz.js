@@ -103,6 +103,11 @@ function EntrarEditor() {
 	$('#jogo').hide();
 	$('#editarPerguntas').show();
 	window.location.hash='editor';
+	if (somIntro !== undefined) {
+		somIntro.pause();
+		somIntro.currentTime = 0;
+	}
+	Editor.Iniciar();
 }
 
 function QuebrarTexto(texto, x, y, larguraMaxima, alturaLinha) {
@@ -343,7 +348,7 @@ function Senha() {
 			tela = TELAS.CONFIGURACOES;
 		}
 		else if (evento.keyCode > 64 && evento.keyCode < 123) {
-			var digitado = String.fromCharCode(event.which);
+			var digitado = String.fromCharCode(evento.which);
 			digitado = evento.shiftKey ? digitado.toUpperCase() : digitado.toLowerCase();
 			this.Texto += digitado;
 		}
@@ -393,7 +398,7 @@ function Creditos() {
 function Roleta() {
 	this.parada = false;
 	this.cores = ["#B8D430", "#3AB745", "#029990", "#3501CB", "#2E2C75", "#673A7E", "#CC0071"];
-	this.materias = ["Geografia", "Historia", "Matematica", "Portugues", "Biologia", "Fisica", "Química"];
+	this.materias = ["Geografia", "História", "Matemática", "Português", "Biologia", "Física", "Química"];
 	this.materiaSelecionada = "";
 	this.anguloInicio = 0;
 	this.anguloGiroInicio = 0;
@@ -549,8 +554,7 @@ function Pergunta(perguntaSelecionada) {
 		context.fillStyle = "#000000";
 		context.fillRect(50, 10, screenWidth - 100, 150);
 		context.fillStyle = "#FFFFFF";
-		context.font="30px Georgia";
-		context.fillText(materia + ' - ' + enunciado, 60, 40);
+		QuebrarTexto(materia + ' - ' + enunciado, 60, 50, 400, 50)
 		if (this.frames >= 60) {
 			this.tempo -= 1;
 			this.frames = 0;

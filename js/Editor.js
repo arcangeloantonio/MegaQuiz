@@ -42,6 +42,7 @@ var Editor = {
 				
 				var obj = _.where(perguntas, {id: perguntaId})[0];
 				
+				$('#containerPerguntas').attr('data-idPergunta', perguntaId);
 				$('#txtEnunciado').val(obj.questao);
 				$('#txtTempo').val(obj.tempo);
 				$.each(obj.respostas, function(i, resposta) { $('#txtResposta' + (i+1)).val(resposta);});
@@ -94,17 +95,24 @@ var Editor = {
 				
 				var respostaCerta = respostaCerta.split('rdbResposta')[1];
 
+				var perguntaId = eval($('#containerPerguntas').attr('data-idPergunta'));
+				
 				var novaPergunta = {
-						id: 99,
+						id: perguntaId === undefined ? Metodos.ObterProximoId() : perguntaId,
 						questao: enunciado,
 						respostas: [resposta1, resposta2, resposta3, resposta4, resposta5],
-						respostaCerta: respostaCerta,
+						respostaCerta: eval(respostaCerta),
 						tempo: tempo,
 						linkAjuda: 'www.blablabla2.com',
 						categoriaId: categoriaId,
 						respondida: false
+				};
+				
+				if (perguntaId !== undefined) {
+					perguntas = _.without(perguntas, _.findWhere(perguntas, { id: perguntaId }));
 				}
 				perguntas.push(novaPergunta);
+				
 				Editor.Metodos.LimparCampos();
 				Editor.Metodos.AtualizarLista();
 				alert('Pergunta adicionada com sucesso!');
@@ -112,6 +120,9 @@ var Editor = {
 		}
 	},
 	Metodos: {
+		ObterProximoId: function() {
+			return _.sortBy(_.filter(perguntas, function(pergunta) { return pergunta.id }), function (id) {return id}).pop().id+1;
+		},
 		LimparCampos: function() {
 			$('#txtEnunciado').val('');
 			$('#txtTempo').val('');
