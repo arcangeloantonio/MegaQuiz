@@ -24,11 +24,12 @@ var pontos = 0;
 
 var tela = 0;
 
+var somIntro;
+var somPergunta;
 var somAcerto;
 var somRoleta;
 var somErro;
 var somLigado;
-
 
 var tecla = {
 	DEL: 8,
@@ -46,6 +47,7 @@ var fundo = new Image();
 var certo = new Image();
 var errado = new Image();
 var imgFisica = new Image();
+var imgBiologia = new Image();
 
 function CarregarJogo() {
 	if (location.hash == "#editor") {
@@ -60,9 +62,11 @@ function CarregarJogo() {
 	canvas.addEventListener("click", Tocou, false);
 	context = canvas.getContext('2d');
 	
+	somIntro = new Audio("conteudo/sfx/Intro.mp3");;
+	somPergunta = new Audio("conteudo/sfx/Pergunta.mp3");
 	somAcerto = new Audio("conteudo/sfx/Acerto.mp3");
 	somRoleta = new Audio("conteudo/sfx/Roleta.mp3");
-	somErro = new Audio("conteudo/sfx/Erro.mp3");
+	somErro = new Audio("conteudo/sfx/Erro.mp3");	
 	
 	fundo.src = "conteudo/img/fundo.png";
 	certo.src = "conteudo/img/certo.png";
@@ -70,6 +74,7 @@ function CarregarJogo() {
 	intro.src = "conteudo/img/intro.png";
 	opcoes.src = "conteudo/img/opcoes.png";
 	imgFisica.src = "conteudo/img/fisica.png";
+	imgBiologia.src = "conteudo/img/biologia.png";
 	
 	screenWidth = canvas.width;
 	screenHeight = canvas.height;
@@ -98,6 +103,29 @@ function EntrarEditor() {
 	$('#jogo').hide();
 	$('#editarPerguntas').show();
 	window.location.hash='editor';
+}
+
+function QuebrarTexto(texto, x, y, larguraMaxima, alturaLinha) {
+	var palavras = texto.split(' ');
+	var linha = '';
+	for(var n = 0; n < palavras.length; n++) {
+		var linhaTeste = linha + palavras[n] + ' ';
+		var metricas = context.measureText(linhaTeste);
+		var larguraTeste = metricas.width;
+		if (larguraTeste > larguraMaxima && n > 0)
+		{
+			context.font="30px Georgia";
+			context.fillText(linha, x, y);
+			linha = palavras[n] + ' ';
+			y += alturaLinha;
+		}
+		else 
+		{
+			linha = linhaTeste;
+		}
+	}
+	context.font="30px Georgia";
+	context.fillText(linha, x, y);
 }
 
 function KeyPress(evento) {
@@ -196,6 +224,11 @@ function desenharJanelaTela() {
 function Menu() {
 	this.posicao = 0;
 	this.Desenhar = function() {
+		if (somLigado) {
+			somPergunta.pause();
+			if (somPergunta.currentTime !== 0) somPergunta.currentTime = 0.0;
+			somIntro.play();
+		}
 		LimparCanvas();
 		context.drawImage(intro, 0,0);
 		var corTitulo = '';
@@ -303,7 +336,13 @@ function Ajuda() {
 	this.Desenhar = function() {
 		context.drawImage(opcoes, 0, 0);
 		desenharFonteCentro("Ajuda", 160, 30, '#000000');
-		desenharFonteCentro("Faça maior número de pontos!", 250, 30, '#000000');
+		var texto = "Gire a roleta e boa sorte! Seu objetivo é responder as perguntas de acordo com a matéria, e não se esqueça do tempo! Cada resposta certa acumulará pontos e no final será dado o Rank! Errou alguma resposta? não fique triste, daremos um link para você acessar e ficar por dentro daquele assunto!"
+		QuebrarTexto(texto, 120, 230, 600, 30);
+		
+		var bonsEstudos = "Bons estudos!";
+		context.font= "30 px Georgia";
+		context.fillStyle = "#000000";
+		context.fillText(bonsEstudos, screenWidth/2 - context.measureText(bonsEstudos).width/2, 465);	
 	};
 	this.Controles = function(evento) {
 		switch (evento.keyCode) {
@@ -353,10 +392,15 @@ function Roleta() {
 	this.raioTexto = 250;
 	this.raioDentro = 0;
 	
-	this.Desenhar = function() {      
+	this.Desenhar = function() {   
+		if (somLigado) {
+			somIntro.pause();
+			somIntro.currentTime = 0.0;
+			somPergunta.play();
+		}
 		LimparCanvas();
 		if (this.parada) {
-			context.drawImage(imgFisica, 0, 0);
+			context.drawImage(imgBiologia, 0, 0);
 		}
 		else {
 			context.drawImage(fundo, 0, 0);
