@@ -4,13 +4,8 @@
 		<title>MegaQuiz!</title>
 		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
 		<link rel="stylesheet" type="text/css" href="conteudo/css/MegaQuiz.css">
-		<script type="text/javascript" src="js/plugins/jquery-2.1.1.min.js"></script>
-		<script type="text/javascript" src="js/plugins/underscore-min.js"></script>
-		<script type="text/javascript" src="js/Editor.js"></script>
-		<script type="text/javascript" src="js/MegaQuiz.js"></script>
-		<script type="text/javascript" src="conteudo/Perguntas.json"></script>
 	</head>
-	<body onload="CarregarJogo()" style="text-align:center;">
+	<body style="text-align:center;">
 		<canvas id="jogo" width="800" height="600" tabindex="1"></canvas>
 		<div id="editarPerguntas" style="display:none;">
 			<div><span id="tituloPerguntas">Editor de Perguntas</span></div>
@@ -98,8 +93,13 @@
 						</div>
 				</div>
 				<div class="clear"></div>
-				
 			</div>
 		</div>
+		<script type="text/javascript" src="js/plugins/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript" src="js/plugins/underscore-min.js"></script>
+		<script type="text/javascript" src="js/Editor.js"></script>
+		<script type="text/javascript" src="js/MegaQuiz.js"></script>
+		<script type="text/javascript" src="conteudo/Perguntas.json"></script>
+		<script type="text/javascript">$(window).bind('load', function() {CarregarJogo();});</script>
 	</body>
 </html>
