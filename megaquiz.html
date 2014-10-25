@@ -5,10 +5,15 @@
 		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
 		<link rel="stylesheet" type="text/css" href="conteudo/css/MegaQuiz.css">
 	</head>
-	<body style="text-align:center;">
-		<canvas id="jogo" width="800" height="600" tabindex="1"></canvas>
+	<body>
+		<div class="centralizar"><canvas id="jogo" width="800" height="600" tabindex="1"></canvas></div>
 		<div id="editarPerguntas" style="display:none;">
-			<div><span id="tituloPerguntas">Editor de Perguntas</span></div>
+			<div style="width:100%">
+				<span><button id="btnVoltar"><--</button></span>
+				<div class="centralizar">
+					<span id="tituloPerguntas">Editor de Perguntas</span>
+				</div>
+			</div>
 			<div id="content">
 				<div id="containerCategoriasListaPerguntas">
 					<div class="containerInput">
@@ -50,18 +55,13 @@
 								<option value="3">3</option>
 								<option value="4">4</option>
 								<option value="5">5</option>
-								<option value="6">6</option>
-								<option value="7">7</option>
-								<option value="8">8</option>
-								<option value="9">9</option>
-								<option value="10">10</option>
 							</select>
 						</div>
 					</div>
-					<div class="containerInput float containerTempo">
-						<label class="labelInput">Tempo em segundos:</label>
+					<div class="containerInput float containerLink">
+						<label class="labelInput">Link de Ajuda:</label>
 						<div class="elementoInput">
-							<input type="text" id="txtTempo">
+							<input id="txtLink" type="text"/>
 						</div>
 					</div>
 					<div class="clear"></div>

@@ -3,13 +3,9 @@
 }
 
 #tituloPerguntas {
-	text-align:center;
-	display:inline-block;
-	width:100%;
 	font-size: 26px;
 	font-weight: bold;
-	color: #FF0000;
-	
+	color: #FF0000;	
 }
 
 #containerCategoriasListaPerguntas {
@@ -53,16 +49,22 @@
 	width: 600px;
 }
 
-#containerPerguntas > .containerTempo {
+#containerPerguntas > .containerLink {
 	margin-top:10px;
+	width:230px;
 }
+
+#containerPerguntas > .containerLink #txtLink{
+	width:230px;
+}
+
 #containerPerguntas > .containerCategoria {
 	margin-top:10px;
-	width:300px;
+	width:200px;
 }
 
 #containerPerguntas > .containerCategoria #ddlCategoria{
-	width:280px;
+	width:180px;
 }
 
 #containerPerguntas > .containerDificuldade {
@@ -72,10 +74,6 @@
 
 #containerPerguntas > .containerDificuldade #ddlDificuldade{
 	width:100px;
-}
-
-#containerPerguntas > .containerTempo #txtTempo {
-	width:130px;
 }
 
 #containerPerguntas .containerEnunciado {
@@ -179,6 +177,10 @@
 	height:15px;
 	vertical-align:middle;
 	cursor:default;
+}
+
+.centralizar {
+	text-align:center;
 }
 
 .clear {

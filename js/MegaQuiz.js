@@ -9,6 +9,7 @@ var pergunta = {};
 var configuracoes = {};
 var ajuda = {};
 var creditos = {};
+var fim = {};
 
 var TELAS = {
 	ROLETA: 0,
@@ -17,7 +18,9 @@ var TELAS = {
 	CREDITOS: 3,
 	MENU: 4,
 	PERGUNTA: 5,
-	SENHA: 6
+	SENHA: 6,
+	FIM: 7,
+	GANHOU: 8
 };
 
 var pontos = 0;
@@ -50,6 +53,10 @@ var imgPergunta = new Image();
 var imgFisica = new Image();
 var imgBiologia = new Image();
 
+var cores = [];
+var materias = [];
+var arco = 0;
+
 function CarregarJogo() {
 	if (location.hash == "#editor") {
 		EntrarEditor();
@@ -62,6 +69,10 @@ function CarregarJogo() {
 	canvas.addEventListener("touchstart", Tocou, false);
 	canvas.addEventListener("click", Tocou, false);
 	context = canvas.getContext('2d');
+	
+	cores = ["#B8D430", "#3AB745", "#029990", "#3501CB", "#2E2C75", "#673A7E", "#CC0071"];
+	materias = ["Geografia", "História", "Matemática", "Português", "Biologia", "Física", "Química"];
+	arco = Math.PI / (materias.length/2);
 	
 	somIntro = new Audio("conteudo/sfx/Intro.mp3");;
 	somPergunta = new Audio("conteudo/sfx/Pergunta.mp3");
@@ -88,6 +99,8 @@ function CarregarJogo() {
 	ajuda = new Ajuda();
 	creditos = new Creditos();
 	senha = new Senha();
+	fim = new Fim();
+	ganhou = new Ganhou();
 	
 	tela = TELAS.MENU;
 	setInterval(Atualizar, 1000/60);
@@ -98,7 +111,7 @@ function Perdeu() {
 	pergunta.acertou = false;
 	somErro.play();
 	pontos = 0;
-	setTimeout(function() { tela = TELAS.MENU; }, 1000);
+	setTimeout(function() { tela = TELAS.FIM; }, 1000);
 }
 
 function EntrarEditor() {
@@ -155,6 +168,12 @@ function KeyPress(evento) {
 		case TELAS.SENHA:
 			senha.Controles(evento);
 		break;
+		case TELAS.FIM:
+			fim.Controles(evento);
+		break;
+		case TELAS.GANHOU:
+			ganhou.Controles(evento);
+		break;
 	}
 }
 
@@ -199,6 +218,11 @@ function Atualizar() {
 		case TELAS.SENHA:
 			senha.Desenhar();
 		break;
+		case TELAS.FIM:
+			fim.Desenhar();
+		break;
+		case TELAS.GANHOU:
+			ganhou.Desenhar();
 	}
 }
 
@@ -206,10 +230,16 @@ function LimparCanvas() {
 	context.clearRect(0, 0, screenWidth, screenHeight);
 }
 
-function desenharFonteCentro(texto, y, tamanhoFonte, cor) {					
+function desenharFonteCentro(texto, y, tamanhoFonte, cor, borda) {
 	context.font= tamanhoFonte + "px Georgia";
 	context.fillStyle = cor;
-	context.fillText(texto, screenWidth/2 - context.measureText(texto).width/2, y);	
+	var x = screenWidth/2 - context.measureText(texto).width/2;
+	context.fillText(texto, x, y);	
+	if (borda !== undefined && borda) {
+		context.strokeStyle = '#000000';
+		context.lineWidth = 1;
+		context.strokeText(texto, x, y);
+	}
 }
 
 function desenharJanelaTela() {
@@ -357,6 +387,56 @@ function Senha() {
 	}
 }
 
+function Fim() {
+	this.Desenhar = function() {
+		context.drawImage(fundo, 0, 0);
+		desenharFonteCentro("Você perdeu! :(", 50, 40, '#FF0000');
+		desenharFonteCentro("Não fique triste! Confira abaixo seu desempenho:", 90, 30, '#000000');
+		
+		this.DesenhaGrafico("Geral", 1, 120, '#0000FF');
+		this.DesenhaGrafico("Geografia", 0.5, 160, '#B8D430');
+		this.DesenhaGrafico("História", 0.8, 200, '#3AB745');
+		this.DesenhaGrafico("Matemática", 0.3, 240, '#029990');
+		this.DesenhaGrafico("Português", 0.65, 280, '#3501CB');
+		this.DesenhaGrafico("Biologia", 0.92, 320, '#2E2C75');
+		this.DesenhaGrafico("Física", 0.75, 360, '#673A7E');
+		this.DesenhaGrafico("Química", 0.2, 400, '#CC0071');
+		
+		desenharFonteCentro("Para mais informações sobre a pergunta que você errou acesse:", 500, 25, '#000000');
+		desenharFonteCentro("http://www.google.com.br", 550, 25, '#0000FF');
+	};
+	this.DesenhaGrafico = function(materia, percentual, y, corGrafico) {
+		var porcentagemMaxima = 650;
+		porcentagem = porcentagemMaxima * percentual;
+		context.fillStyle = corGrafico;
+		context.fillRect(50, y, porcentagem, 40);
+		context.fillRect(porcentagemMaxima+50, y, 5, 40);
+		context.font= "30px Georgia";
+		context.fillStyle = '#FFFFFF';
+		context.fillText(materia, 60, y+30);
+		context.fillStyle = '#000000';
+		context.fillText(percentual*100 + "%", 710, y+30);
+	};
+		this.Controles = function(evento) {
+		if (evento.keyCode === tecla.ENTER || evento.keyCode === tecla.ESC) {
+			CarregarJogo();
+		}
+	}
+}
+
+function Ganhou() {
+	this.Desenhar = function() {
+		context.drawImage(fundo, 0, 0);
+		desenharFonteCentro("Você ganhou o jogo! :D", 250, 40, '#FF0000');
+		desenharFonteCentro("Não existem mais perguntas a serem respondidas!", 300, 30, '#000000');
+	};
+	this.Controles = function(evento) {
+		if (evento.keyCode === tecla.ENTER || evento.keyCode === tecla.ESC) {
+			CarregarJogo();
+		}
+	}
+}
+
 function Ajuda() {
 	this.Desenhar = function() {
 		context.drawImage(opcoes, 0, 0);
@@ -399,15 +479,13 @@ function Creditos() {
 
 function Roleta() {
 	this.parada = false;
-	this.cores = ["#B8D430", "#3AB745", "#029990", "#3501CB", "#2E2C75", "#673A7E", "#CC0071"];
-	this.materias = ["Geografia", "História", "Matemática", "Português", "Biologia", "Física", "Química"];
 	this.materiaSelecionada = "";
 	this.anguloInicio = 0;
 	this.anguloGiroInicio = 0;
-	this.arco = Math.PI / 3.5;
 	this.acabarTempoGiro = null;
 	
 	this.girando = false;
+	this.semPerguntas = false;
 	
 	this.giroArcoComeco = 10;
 	this.tempoGiro = 0;
@@ -417,7 +495,7 @@ function Roleta() {
 	this.raioTexto = 250;
 	this.raioDentro = 0;
 	
-	this.Desenhar = function() {   
+	this.Desenhar = function() {
 		if (somLigado) {
 			somIntro.pause();
 			somIntro.currentTime = 0.0;
@@ -432,23 +510,22 @@ function Roleta() {
 			context.strokeStyle = "#000000";
 			context.lineWidth = 2;
 			context.font = 'bold 12px sans-serif';
-		
-			for(var i = 0; i < 7; i++) {
-				var angulo = this.anguloInicio + i * this.arco;
-				context.fillStyle = this.cores[i];
+			for(var i = 0; i < materias.length; i++) {
+				var angulo = this.anguloInicio + i * arco;
+				context.fillStyle = cores[i];
 			
 				context.beginPath();
-				context.arc(400, 300, this.raioFora, angulo, angulo + this.arco, false);
-				context.arc(400, 300, this.raioDentro, angulo + this.arco, angulo, true);
+				context.arc(400, 300, this.raioFora, angulo, angulo + arco, false);
+				context.arc(400, 300, this.raioDentro, angulo + arco, angulo, true);
 				context.stroke();
 				context.fill();
 			
 				context.save();
 				context.fillStyle = "#FFFFFF";
 				context.font = '20px sans-serif';
-				context.translate(400 + Math.cos(angulo + this.arco / 2) * this.raioTexto, 300 + Math.sin(angulo + this.arco / 2) * this.raioTexto);
-				context.rotate(angulo + this.arco / 2 + Math.PI / 2);
-				var text = this.materias[i];
+				context.translate(400 + Math.cos(angulo + arco / 2) * this.raioTexto, 300 + Math.sin(angulo + arco / 2) * this.raioTexto);
+				context.rotate(angulo + arco / 2 + Math.PI / 2);
+				var text = materias[i];
 				context.fillText(text, -context.measureText(text).width / 2, 0);
 				context.restore();
 			} 
@@ -495,16 +572,15 @@ function Roleta() {
   
 	this.PararDeGirarRoleta = function() {
 		var graus = this.anguloInicio * 180 / Math.PI + 90;
-		var arcd = this.arco * 180 / Math.PI;
+		var arcd = arco * 180 / Math.PI;
 		var index = Math.floor((360 - graus % 360) / arcd);
-		
-		var materiaId =  _.findWhere(categorias, { categoria: this.materias[index] }).id;
-		var perguntasParaSortear =  _.where(perguntas, {categoriaId: materiaId});
+		var materiaId =  _.findWhere(categorias, { categoria: materias[index] }).id;
+		var perguntasParaSortear =  _.where(perguntas, {categoriaId: materiaId, respondida: false});
 		
 		pergunta = new Pergunta(perguntasParaSortear[Math.floor(Math.random() * perguntasParaSortear.length)]);
 		setTimeout(function() { tela = TELAS.PERGUNTA}, 1000);
 		this.parada = true;
-	    this.materiaSelecionada = this.materias[index];
+		this.materiaSelecionada = materias[index];
 		if (somLigado) { 
 			somRoleta.pause();
 			somRoleta.currentTime = 0.0;
@@ -582,13 +658,10 @@ function Pergunta(perguntaSelecionada) {
 	
 	if (perguntaSelecionada !== undefined) {
 		this.respostaCerta = perguntaSelecionada.respostaCerta;
-		this.tempo = perguntaSelecionada.tempo;
+		this.tempo = 30;
 	};
 	
 	this.DesenharPergunta = function(letraPergunta, texto) {
-		//context.fillStyle = "#000000";
-		//context.fillRect(this.quadradoInicioX, letraPergunta.altura+this.distanciaFonteQuadrado, this.quadradoLargura, this.quadradoAltura);
-		
 		context.fillStyle = "#000000";
 		context.font="20px Georgia";
 		context.fillText(texto, 60, letraPergunta.altura+30);
@@ -601,11 +674,17 @@ function Pergunta(perguntaSelecionada) {
 			if (x >= this.quadradoInicioX && x <= this.quadradoLargura+this.quadradoInicioX && y >= perguntaDaVez.altura+this.distanciaFonteQuadrado && y <= this.quadradoAltura+perguntaDaVez.altura+this.distanciaFonteQuadrado) {
 				roleta = new Roleta();
 				if (perguntaDaVez.valor === this.respostaCerta && somLigado) {
-					console.log('Acertou!', perguntaDaVez.valor);
 					somAcerto.play();
+					_.findWhere(perguntas, { id: perguntaSelecionada.id }).respondida = true
+					var perguntasDaCategoria = _.where(perguntas, { categoriaId: perguntaSelecionada.categoriaId, respondida: false });
+					if (perguntasDaCategoria.length == 0) {
+							materias = _.without(materias, materias[perguntaSelecionada.categoriaId-1]);
+							arco = Math.PI / (materias.length/2);
+					}
 					this.respondeu = true;
 					this.acertou = true;
 					pontos += 10;
+					if (materias.length == 0) tela = TELAS.GANHOU;
 					setTimeout(function() { tela = TELAS.ROLETA; }, 1000);
 				}
 				else {
