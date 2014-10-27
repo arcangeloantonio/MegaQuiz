@@ -116,13 +116,13 @@ function ReiniciarJogo() {
 	}
 	
 	pontosJogador = {
-		Geografia: { id: 1, pontuacao: 0, porcentagemResposta : 0, respondidas: 0},
-		Historia: { id: 2, pontuacao: 0, porcentagemResposta : 0, respondidas: 0},
-		Matematica: { id: 3, pontuacao: 0, porcentagemResposta : 0, respondidas: 0},
-		Portugues: { id: 4, pontuacao: 0, porcentagemResposta : 0, respondidas: 0},
-		Biologia: { id: 5, pontuacao: 0, porcentagemResposta : 0, respondidas: 0},
-		Fisica: { id: 6, pontuacao: 0, porcentagemResposta : 0, respondidas: 0},
-		Quimica: { id: 7, pontuacao: 0, porcentagemResposta : 0, respondidas: 0}
+		Geografia: { id: 1, pontuacao: 0, porcentagemResposta : 0, respondidas: 0, perdeu: false},
+		Historia: { id: 2, pontuacao: 0, porcentagemResposta : 0, respondidas: 0, perdeu: false},
+		Matematica: { id: 3, pontuacao: 0, porcentagemResposta : 0, respondidas: 0, perdeu: false},
+		Portugues: { id: 4, pontuacao: 0, porcentagemResposta : 0, respondidas: 0, perdeu: false},
+		Biologia: { id: 5, pontuacao: 0, porcentagemResposta : 0, respondidas: 0, perdeu: false},
+		Fisica: { id: 6, pontuacao: 0, porcentagemResposta : 0, respondidas: 0, perdeu: false},
+		Quimica: { id: 7, pontuacao: 0, porcentagemResposta : 0, respondidas: 0, perdeu: false}
 	}
 	
 	menu = new Menu();
@@ -204,7 +204,7 @@ function KeyPress(evento) {
 }
 
 function Tocou(evento) {
-	var rect = canvas.getBoundingClientRect();
+	var rect = canvas.getBoundingClientRect();	
 	var x = evento.clientX - rect.left;
 	var y = evento.clientY - rect.top;
 	switch (tela) {
@@ -217,6 +217,10 @@ function Tocou(evento) {
 		break;
 		case TELAS.PERGUNTA:
 			pergunta.VerificaResposta(x, y);
+		break;
+		break;
+		case TELAS.FIM:
+			fim.Clique(x,y);
 		break;
 	}
 }
@@ -412,14 +416,14 @@ function Fim() {
 			contagemTotal += obj.respondidas;
 		});
 		
-		var porcTotal = this.ValidaNumero((porcentagemTotal/contagemTotal).toFixed(2));
-		var porcGeografia = this.ValidaNumero((pontosJogador.Geografia.porcentagemResposta/pontosJogador.Geografia.respondidas).toFixed(2));
-		var porcHistoria = this.ValidaNumero((pontosJogador.Historia.porcentagemResposta/pontosJogador.Historia.respondidas).toFixed(2));
-		var porcMatematica = this.ValidaNumero((pontosJogador.Matematica.porcentagemResposta/pontosJogador.Matematica.respondidas).toFixed(2));
-		var porcPortugues = this.ValidaNumero((pontosJogador.Portugues.porcentagemResposta/pontosJogador.Portugues.respondidas).toFixed(2));
-		var porcBiologia = this.ValidaNumero((pontosJogador.Biologia.porcentagemResposta/pontosJogador.Biologia.respondidas).toFixed(2));
-		var porcFisica = this.ValidaNumero((pontosJogador.Fisica.porcentagemResposta/pontosJogador.Fisica.respondidas).toFixed(2));
-		var porcQuimica = this.ValidaNumero((pontosJogador.Quimica.porcentagemResposta/pontosJogador.Quimica.respondidas).toFixed(2));
+		var porcTotal = this.ObterDificuldade(porcentagemTotal/contagemTotal);
+		var porcGeografia = this.ObterDificuldade(pontosJogador.Geografia.porcentagemResposta/pontosJogador.Geografia.respondidas, pontosJogador.Geografia.perdeu);
+		var porcHistoria = this.ObterDificuldade(pontosJogador.Historia.porcentagemResposta/pontosJogador.Historia.respondidas, pontosJogador.Historia.perdeu);
+		var porcMatematica = this.ObterDificuldade(pontosJogador.Matematica.porcentagemResposta/pontosJogador.Matematica.respondidas, pontosJogador.Matematica.perdeu);
+		var porcPortugues = this.ObterDificuldade(pontosJogador.Portugues.porcentagemResposta/pontosJogador.Portugues.respondidas, pontosJogador.Portugues.perdeu);
+		var porcBiologia = this.ObterDificuldade(pontosJogador.Biologia.porcentagemResposta/pontosJogador.Biologia.respondidas, pontosJogador.Biologia.perdeu);
+		var porcFisica = this.ObterDificuldade(pontosJogador.Fisica.porcentagemResposta/pontosJogador.Fisica.respondidas, pontosJogador.Fisica.perdeu);
+		var porcQuimica = this.ObterDificuldade(pontosJogador.Quimica.porcentagemResposta/pontosJogador.Quimica.respondidas, pontosJogador.Quimica.perdeu);
 		
 		this.DesenhaGrafico("Geral", porcTotal, 120, '#0000FF');
 		this.DesenhaGrafico("Geografia", porcGeografia, 160, '#B8D430');
@@ -445,14 +449,25 @@ function Fim() {
 		context.fillStyle = '#000000';
 		context.fillText(percentual*100 + "%", 710, y+30);
 	};
+	this.Clique = function(x, y) {
+		if (y >= 525 && y <= 560) {
+			console.log('oi', $('#lnkAjuda'));
+			$('#lnkAjuda').attr('href', pergunta.linkAjuda);
+			$('#lnkAjuda').click();
+			//var x = pergunta.linkAjuda;
+			//window.open(x, "_blank", "toolbar=yes, scrollbars=yes, resizable=yes, top=500, left=500, width=400, height=400");
+		}
+	}
 	this.Controles = function(evento) {
 		if (evento.keyCode === tecla.ENTER || evento.keyCode === tecla.ESC) {
 			ReiniciarJogo();
 		}
 	};
-	this.ValidaNumero = function(numero) {
-		if (numero === "NaN") return 0;
-		return numero;
+	this.ObterDificuldade = function(numero, perdeu) {
+		if (perdeu !== undefined && perdeu) return 1.00;
+		if (numero === NaN || numero === "NaN" || isNaN(numero)) return 0.00;
+		numero = (numero - 1) * -1;
+		return numero.toFixed(2);
 	};
 }
 
@@ -668,7 +683,7 @@ function Pergunta(perguntaSelecionada) {
 	
 	this.DesenharCabecalho = function(materia, enunciado) {
 		context.fillStyle = "#000000";
-		QuebrarTexto(materia + ' - ' + enunciado, 60, 60, 550, 25, 25)
+		QuebrarTexto(materia + ' - ' + enunciado, 60, 60, 550, 25, 25);
 		if (this.frames >= 60) {
 			this.tempo -= 1;
 			this.frames = 0;
@@ -682,7 +697,7 @@ function Pergunta(perguntaSelecionada) {
 	this.quadradoInicioX = 50;
 	this.quadradoAltura = 80;
 	this.quadradoLargura = screenWidth - 100;
-	this.distanciaFonteQuadrado = 0
+	this.distanciaFonteQuadrado = 0;
 	
 	this.LETRAPERGUNTA = {
 		A: { texto: 'A', valor: 1, altura: 165 },
@@ -695,6 +710,8 @@ function Pergunta(perguntaSelecionada) {
 	if (perguntaSelecionada !== undefined) {
 		this.respostaCerta = perguntaSelecionada.respostaCerta;
 		this.tempo = (perguntaSelecionada.dificuldade * 10) + 10;
+		this.categoriaId = perguntaSelecionada.categoriaId;
+		this.linkAjuda = perguntaSelecionada.linkAjuda;
 	};
 	
 	this.DesenharPergunta = function(letraPergunta, texto) {
@@ -763,7 +780,7 @@ function Pergunta(perguntaSelecionada) {
 	
 	this.AcertouResposta = function() {
 		if (somLigado) somAcerto.play();
-		_.findWhere(perguntas, { id: perguntaSelecionada.id }).respondida = true
+		_.findWhere(perguntas, { id: perguntaSelecionada.id }).respondida = true;
 		var perguntasDaCategoria = _.where(perguntas, { categoriaId: perguntaSelecionada.categoriaId, respondida: false });
 		if (perguntasDaCategoria.length == 0) {
 			var materiaTirar = _.findWhere(categorias, { id: perguntaSelecionada.categoriaId }).categoria;
@@ -780,13 +797,13 @@ function Pergunta(perguntaSelecionada) {
 		 
 		 var pontoMateria = _.findWhere(pontosJogador, { id: perguntaSelecionada.categoriaId });
 		 if (this.tempo > tempoTotalPergunta * 0.5) {
-			pontoMateria.pontuacao += pontuacaoMaximaPossivel
+			pontoMateria.pontuacao += pontuacaoMaximaPossivel;
 		 }
 		 else if (this.tempo >= tempoTotalPergunta * 0.5 && this.tempo > tempoTotalPergunta * 0.75) {
-			pontoMateria.pontuacao += pontuacaoMaximaPossivel * 0.75
+			pontoMateria.pontuacao += pontuacaoMaximaPossivel * 0.75;
 		 }
 		 else {
-			pontoMateria.pontuacao += pontuacaoMaximaPossivel * 0.5
+			pontoMateria.pontuacao += pontuacaoMaximaPossivel * 0.5;
 		 }
 		 
 		 var porcentagemTempoResposta = (this.tempo/tempoTotalPergunta).toFixed(2);
@@ -797,7 +814,7 @@ function Pergunta(perguntaSelecionada) {
 		 
 		 $.each(pontosJogador, function(i, obj) {totalDePontos += obj.pontuacao;});
 		 
-		 pontos = totalDePontos
+		 pontos = totalDePontos;
 		
 		if (materias.length == 0)  {
 			setTimeout(function() { tela = TELAS.GANHOU; }, 1000);
@@ -812,6 +829,7 @@ function Pergunta(perguntaSelecionada) {
 		pergunta.acertou = false;
 		if (somLigado) somErro.play();
 		pontos = 0;
+		_.findWhere(pontosJogador, { id: perguntaSelecionada.categoriaId }).perdeu = true;
 		setTimeout(function() { tela = TELAS.FIM; }, 1000);
 	};
 }
