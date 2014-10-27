@@ -15,6 +15,7 @@ var Editor = {
 	},
 	Eventos: {
 		Vincular: function() {
+			this.AoClicarVoltar();
 			this.CarregarCategorias();
 			this.AoMudarCategoria();
 			this.AoSelecionarPergunta();
@@ -22,6 +23,11 @@ var Editor = {
 			this.AoClicarAdicionar();
 			this.AoClicarRemover();
 			this.AoClicarBotaoAdicionar();
+		},
+		AoClicarVoltar: function() {
+			$('#btnVoltar').on('click', function() {
+				window.location.href = document.location.href.split("#")[0];
+			});
 		},
 		CarregarCategorias: function() {
 			var inicio = '<option value="0">Selecione...</option>';
@@ -44,9 +50,9 @@ var Editor = {
 				
 				$('#containerPerguntas').attr('data-idPergunta', perguntaId);
 				$('#txtEnunciado').val(obj.questao);
-				$('#txtTempo').val(obj.tempo);
+				$('#txtLink').val(obj.linkAjuda);
 				$.each(obj.respostas, function(i, resposta) { $('#txtResposta' + (i+1)).val(resposta);});
-				$('#rdbResposta' + obj.respostaCerta).attr('checked', 'checked');
+				$('#rdbResposta' + obj.respostaCerta).prop('checked', 'checked');
 				$('#ddlCategoria').val(obj.categoriaId);
 				$('#spnRemove').css('visibility', 'visible');
 			});
@@ -75,7 +81,7 @@ var Editor = {
 				var enunciado = $('#txtEnunciado').val();
 				var categoriaId = eval($('#ddlCategoria').val());
 				var dificuldade = $('#ddlDificuldade').val();
-				var tempo = $('#txtTempo').val();
+				var link = $('#txtLink').val();
 				var resposta1 = $('#txtResposta1').val();
 				var resposta2 = $('#txtResposta2').val();
 				var resposta3 = $('#txtResposta3').val();
@@ -85,7 +91,6 @@ var Editor = {
 				var respostaCerta = $('[name="rdbResposta"]:checked').attr('id');
 				
 				if (enunciado.length === 0) return alert('Digite um enunciado');
-				if (tempo.length === 0) return alert('Digite um tempo');
 				if (resposta1.length === 0) return alert('Digite a resposta A');
 				if (resposta2.length === 0) return alert('Digite a resposta B');
 				if (resposta3.length === 0) return alert('Digite a resposta C');
@@ -102,8 +107,7 @@ var Editor = {
 						questao: enunciado,
 						respostas: [resposta1, resposta2, resposta3, resposta4, resposta5],
 						respostaCerta: eval(respostaCerta),
-						tempo: tempo,
-						linkAjuda: 'www.blablabla2.com',
+						linkAjuda: link,
 						categoriaId: categoriaId,
 						respondida: false
 				};
@@ -125,9 +129,9 @@ var Editor = {
 		},
 		LimparCampos: function() {
 			$('#txtEnunciado').val('');
-			$('#txtTempo').val('');
+			$('#txtLink').val('');
 			$('.txtResposta').val('');
-			$('[name="rdbResposta"]').attr('checked', false);
+			$('[name="rdbResposta"]').removeAttr('checked');
 			$('#containerPerguntas').removeAttr('data-idPergunta')
 		},
 		AtualizarLista: function() {
