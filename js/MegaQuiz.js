@@ -814,4 +814,8 @@ function Pergunta(perguntaSelecionada) {
 		pontos = 0;
 		setTimeout(function() { tela = TELAS.FIM; }, 1000);
 	};
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> origin/master
