@@ -7,13 +7,13 @@
 	</head>
 	<body>
 		<div class="centralizar"><canvas id="jogo" width="800" height="600" tabindex="1"></canvas></div>
-		<a id="lnkAjuda" style="display:none" target="_blank"></a>
-		<div id="editarPerguntas" style="display:none;">
-			<div style="width:100%">
-				<span><button id="btnVoltar"><--</button></span>
+		<div id="editarPerguntas" class="escondida">
+			<div class="largura100">
+				<div class="float"><button id="btnVoltar"><--</button></div>
 				<div class="centralizar">
 					<span id="tituloPerguntas">Editor de Perguntas</span>
 				</div>
+				<div class="clear"></div>
 			</div>
 			<div id="content">
 				<div id="containerCategoriasListaPerguntas">
@@ -24,10 +24,9 @@
 						</div>
 					</div>
 					<div class="containerInput">
-						<label class="labelInput" style="float:left; width:50%;">Perguntas:</label>
+						<label class="labelInput" id="lblTituloContainerPerguntas">Perguntas:</label>
 						<div class="labelInput" id="containerControle">
-							<span id="spnAdd" class="symbol">+</span>
-							<span id="spnRemove" class="symbol">-</span>
+							<button id="btnRemove" class="invisivel">Remover Pergunta</button>
 						</div>
 						<div class="clear"></div>
 						<div id="groupPerguntas">
@@ -38,7 +37,7 @@
 					<div class="containerInput containerEnunciado">
 						<label class="labelInput">Enunciado:</label>
 						<div class="elementoInput">
-							<input type="text" id="txtEnunciado">
+							<input type="text" maxlength="340" id="txtEnunciado">
 						</div>
 					</div>
 					<div class="containerInput float containerCategoria">
@@ -70,11 +69,11 @@
 						<div id="containerQuestoes">
 							<span id="spnQuestoes">Questões</span>
 							<div>
-								<div class="containerResposta"><label class="lblResposta">A:</label><input type="text" class="txtResposta" id="txtResposta1"></div>
-								<div class="containerResposta"><label class="lblResposta">B:</label><input type="text" class="txtResposta" id="txtResposta2"></div>
-								<div class="containerResposta"><label class="lblResposta">C:</label><input type="text" class="txtResposta" id="txtResposta3"></div>
-								<div class="containerResposta"><label class="lblResposta">D:</label><input type="text" class="txtResposta" id="txtResposta4"></div>
-								<div class="containerResposta"><label class="lblResposta">E:</label><input type="text" class="txtResposta" id="txtResposta5"></div>
+								<div class="containerResposta"><label class="lblResposta">A:</label><input type="text" class="txtResposta" maxlength="250" id="txtResposta1"></div>
+								<div class="containerResposta"><label class="lblResposta">B:</label><input type="text" class="txtResposta" maxlength="250" id="txtResposta2"></div>
+								<div class="containerResposta"><label class="lblResposta">C:</label><input type="text" class="txtResposta" maxlength="250" id="txtResposta3"></div>
+								<div class="containerResposta"><label class="lblResposta">D:</label><input type="text" class="txtResposta" maxlength="250" id="txtResposta4"></div>
+								<div class="containerResposta"><label class="lblResposta">E:</label><input type="text" class="txtResposta" maxlength="250" id="txtResposta5"></div>
 							</div>
 						</div>
 						<div id="containerCorretas">
@@ -86,11 +85,14 @@
 							<div class="containerCorreta"><input type="radio" name="rdbResposta" id="rdbResposta5" /></div>
 						</div>
 						<div id="containerBotaoAdicionar">
+							<button id="btnNovaPergunta">Nova Pergunta</button>
 							<button id="btnAdicionar">Adicionar pergunta</button>
 						</div>
 					</div>
 					<div id="containerBotao">
-							<button id="btnSalvar">Salvar</button>
+							<button id="btnSalvar">Criar banco de perguntas</button>
+							<br/>
+							<span id="spnInfoPerguntas">*Para editar as perguntas, pegue o arquivo criado nesse site e coloque ele dentro da pasta conteudo que está na pasta em que o jogo está.</span>
 						</div>
 				</div>
 				<div class="clear"></div>

@@ -52,6 +52,11 @@ var errado = new Image();
 var imgPergunta = new Image();
 var imgFisica = new Image();
 var imgBiologia = new Image();
+var imgHistoria = new Image();
+var imgQuimica = new Image();
+var imgGeografia = new Image();
+var imgPortugues = new Image();
+var imgMatematica = new Image();
 
 var cores = [];
 var materias = [];
@@ -86,6 +91,11 @@ function CarregarJogo() {
 	opcoes.src = "conteudo/img/opcoes.png";
 	imgFisica.src = "conteudo/img/fisica.png";
 	imgBiologia.src = "conteudo/img/biologia.png";
+	imgHistoria.src = "conteudo/img/historia.png";
+	imgQuimica.src = "conteudo/img/quimica.png";
+	imgGeografia.src = "conteudo/img/geografia.png";
+	imgPortugues.src = "conteudo/img/biologia.png";
+	imgMatematica.src = "conteudo/img/biologia.png";
 	
 	screenWidth = canvas.width;
 	screenHeight = canvas.height;
@@ -209,15 +219,25 @@ function Tocou(evento) {
 	var y = evento.clientY - rect.top;
 	switch (tela) {
 		case TELAS.MENU:
-			//TrataToqueMenu(x, y);
-			//tela = TELAS.ROLETA;
+			menu.Clique(x,y);
+		break;
+		case TELAS.CONFIGURACOES:
+			configuracoes.Clique(x,y);
+		break;
+		case TELAS.SENHA:
+			senha.Clique(x,y);
+		break;
+		case TELAS.AJUDA:
+			ajuda.Clique(x,y);
+		break;
+		case TELAS.CREDITOS:
+			creditos.Clique(x,y);
 		break;
 		case TELAS.ROLETA:
 			roleta.Girar();
 		break;
 		case TELAS.PERGUNTA:
 			pergunta.VerificaResposta(x, y);
-		break;
 		break;
 		case TELAS.FIM:
 			fim.Clique(x,y);
@@ -305,6 +325,20 @@ function Menu() {
 			break;
 		};
 	};
+	this.Clique = function(x, y) {
+		if (x >= 360 && x <= 440 && y >= 398 && y <= 430) {
+			tela = TELAS.ROLETA;
+		}
+		else if (x >= 305 && x <= 495 && y >= 440 && y <= 472) {
+			tela = TELAS.CONFIGURACOES;
+		}
+		else if (x >= 360 && x <= 440 && y >= 488 && y <= 520) {
+			tela = TELAS.AJUDA;
+		}
+		else if (x >= 340 && x <= 455 && y >= 530 && y <= 555) {
+			tela = TELAS.CREDITOS;
+		}
+	};
 }
 
 function Configuracoes() {
@@ -357,6 +391,21 @@ function Configuracoes() {
 			if (somRoleta.currentTime !== 0) somRoleta.currentTime = 0;
 		}
 	};
+	this.Clique = function(x, y) {
+		if ((x < 75 || x > 710) || (y < 120 || y > 495)) {
+			menu.posicao = TELAS.CONFIGURACOES;
+			tela = TELAS.MENU;
+		}
+		else if (somLigado && x >= 280 && x <= 515 && y >= 225 && y <= 250) {
+			somLigado = false;
+		}
+		else if (!somLigado && x >= 250 && x <= 550 && y >= 225 && y <= 250) {
+			somLigado = true;
+		}
+		else if (x >= 270 && x <= 530 && y >= 275 && y <= 305) {
+			tela = TELAS.SENHA;
+		}
+	};
 }
 
 function Senha() {
@@ -399,19 +448,29 @@ function Senha() {
 			digitado = evento.shiftKey ? digitado.toUpperCase() : digitado.toLowerCase();
 			this.Texto += digitado;
 		}
-	}
+	};
+	this.Clique = function(x, y) {
+		if ((x < 75 || x > 710) || (y < 120 || y > 495)) {
+			configuracoes.posicao = 2;
+			tela = TELAS.CONFIGURACOES;
+		}
+	};
 }
 
 function Fim() {
 	this.Desenhar = function() {
 		context.drawImage(fundo, 0, 0);
 		DesenharFonteCentro("Você perdeu! :(", 50, 40, '#FF0000');
-		DesenharFonteCentro("Não fique triste! Confira abaixo seu desempenho:", 90, 30, '#000000');
+		DesenharFonteCentro("Não fique triste! Confira abaixo as matérias que você teve mais dificuldade:", 90, 20, '#000000');
 		
 		var porcentagemTotal = 0;
 		var contagemTotal = 0;
 		
 		$.each(pontosJogador, function(i, obj) {
+			if (obj.perdeu) {
+				obj.porcentagemResposta = 100;
+				obj.respondidas = 1;
+			}
 			porcentagemTotal += obj.porcentagemResposta;
 			contagemTotal += obj.respondidas;
 		});
@@ -434,8 +493,8 @@ function Fim() {
 		this.DesenhaGrafico("Física", porcFisica, 360, '#673A7E');
 		this.DesenhaGrafico("Química", porcQuimica, 400, '#CC0071');
 		
-		DesenharFonteCentro("Para mais informações sobre a pergunta que você errou acesse:", 500, 25, '#000000');
-		DesenharFonteCentro("http://www.google.com.br", 550, 25, '#0000FF');
+		DesenharFonteCentro("Para mais informações sobre a pergunta que você errou acesse:", 500, 20, '#000000');
+		DesenharFonteCentro(pergunta.linkAjuda, 550, 20, '#0000FF');
 	};
 	this.DesenhaGrafico = function(materia, percentual, y, corGrafico) {
 		var porcentagemMaxima = 650;
@@ -451,11 +510,10 @@ function Fim() {
 	};
 	this.Clique = function(x, y) {
 		if (y >= 525 && y <= 560) {
-			console.log('oi', $('#lnkAjuda'));
-			$('#lnkAjuda').attr('href', pergunta.linkAjuda);
-			$('#lnkAjuda').click();
-			//var x = pergunta.linkAjuda;
-			//window.open(x, "_blank", "toolbar=yes, scrollbars=yes, resizable=yes, top=500, left=500, width=400, height=400");
+			window.open(pergunta.linkAjuda, "_blank");
+		}
+		else {
+			ReiniciarJogo();
 		}
 	}
 	this.Controles = function(evento) {
@@ -502,7 +560,17 @@ function Ajuda() {
 				menu.posicao = TELAS.AJUDA;
 				tela = TELAS.MENU;
 			break;
+			case tecla.ENTER:
+				menu.posicao = TELAS.AJUDA;
+				tela = TELAS.MENU;
+			break;
 		};
+	};
+	this.Clique = function(x, y) {
+		if ((x < 75 || x > 710) || (y < 120 || y > 495)) {
+			menu.posicao = TELAS.AJUDA;
+			tela = TELAS.MENU;
+		}
 	};
 }
 
@@ -520,7 +588,17 @@ function Creditos() {
 				menu.posicao = TELAS.CREDITOS;
 				tela = TELAS.MENU;
 			break;
+			case tecla.ENTER:
+				menu.posicao = TELAS.CREDITOS;
+				tela = TELAS.MENU;
+			break;
 		};
+	};
+	this.Clique = function(x, y) {
+		if ((x < 75 || x > 710) || (y < 120 || y > 495)) {
+			menu.posicao = TELAS.CREDITOS;
+				tela = TELAS.MENU;
+		}
 	};
 }
 
@@ -550,7 +628,29 @@ function Roleta() {
 		}
 		LimparCanvas();
 		if (this.parada) {
-			context.drawImage(imgBiologia, 0, 0);
+			switch (this.materiaSelecionada) {
+				case "Geografia":	
+				context.drawImage(imgGeografia, 0, 0);
+				break;
+				case "História":
+				context.drawImage(imgHistoria, 0, 0);
+				break;
+				case "Matemática":
+				context.drawImage(imgMatematica, 0, 0);
+				break;
+				case "Português":
+				context.drawImage(imgPortugues, 0, 0);
+				break;
+				case "Biologia":
+				context.drawImage(imgBiologia, 0, 0);
+				break;
+				case "Física":
+				context.drawImage(imgFisica, 0, 0);
+				break;
+				case "Química":
+				context.drawImage(imgQuimica, 0, 0);
+				break;
+			}			
 		}
 		else {
 			context.drawImage(fundo, 0, 0);
@@ -670,7 +770,7 @@ function Pergunta(perguntaSelecionada) {
 				}
 			}
 			else {
-				this.DesenharCabecalho(roleta.materiaSelecionada, perguntaSelecionada.questao);
+				this.DesenharCabecalho(perguntaSelecionada.questao);
 				this.DesenharPergunta(this.LETRAPERGUNTA.A, perguntaSelecionada.respostas[0]);
 				this.DesenharPergunta(this.LETRAPERGUNTA.B, perguntaSelecionada.respostas[1]);
 				this.DesenharPergunta(this.LETRAPERGUNTA.C, perguntaSelecionada.respostas[2]);
@@ -681,9 +781,9 @@ function Pergunta(perguntaSelecionada) {
 		}
 	};
 	
-	this.DesenharCabecalho = function(materia, enunciado) {
-		context.fillStyle = "#000000";
-		QuebrarTexto(materia + ' - ' + enunciado, 60, 60, 550, 25, 25);
+	this.DesenharCabecalho = function(enunciado) {
+		context.fillStyle = "#000000";		
+		QuebrarTexto(enunciado, 50, 45, 650, 25, 20);
 		if (this.frames >= 60) {
 			this.tempo -= 1;
 			this.frames = 0;
@@ -691,7 +791,7 @@ function Pergunta(perguntaSelecionada) {
 		context.font="20px Georgia";
 		
 		if (this.tempo <= 10) context.fillStyle = "#FF0000";		
-		context.fillText(this.tempo + (this.tempo == 1 ? " segundo" : " segundos"), 630, 140);
+		context.fillText(this.tempo + (this.tempo == 1 ? " segundo" : " segundos"), 630, 145);
 	};
 	
 	this.quadradoInicioX = 50;
@@ -712,12 +812,14 @@ function Pergunta(perguntaSelecionada) {
 		this.tempo = (perguntaSelecionada.dificuldade * 10) + 10;
 		this.categoriaId = perguntaSelecionada.categoriaId;
 		this.linkAjuda = perguntaSelecionada.linkAjuda;
+		
+		if (!(/^www/).test(this.linkAjuda) && !(/^http:/).test(this.linkAjuda)) this.linkAjuda = 'http://www.' + this.linkAjuda;
+		if ((/^www/).test(this.linkAjuda)) this.linkAjuda = 'http://' + this.linkAjuda;
 	};
 	
 	this.DesenharPergunta = function(letraPergunta, texto) {
 		context.fillStyle = "#000000";
-		context.font="20px Georgia";
-		context.fillText(texto, 60, letraPergunta.altura+30);
+		QuebrarTexto(letraPergunta.texto + ". " + texto, 60, letraPergunta.altura+20, 680, 25, 20);
 	};
 	
 	this.SortearPergunta = function(materiaId) {

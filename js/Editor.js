@@ -27,6 +27,7 @@ var Editor = {
 		AoClicarVoltar: function() {
 			$('#btnVoltar').on('click', function() {
 				window.location.href = document.location.href.split("#")[0];
+				window.reload();
 			});
 		},
 		CarregarCategorias: function() {
@@ -54,21 +55,22 @@ var Editor = {
 				$.each(obj.respostas, function(i, resposta) { $('#txtResposta' + (i+1)).val(resposta);});
 				$('#rdbResposta' + obj.respostaCerta).prop('checked', 'checked');
 				$('#ddlCategoria').val(obj.categoriaId);
-				$('#spnRemove').css('visibility', 'visible');
+				$('#btnRemove').css('visibility', 'visible');
+				$('#btnAdicionar').html('Editar Pergunta');
 			});
 		},
 		AoClicarAdicionar: function() {
-			$('#spnAdd').on('click', function() {
+			$('#btnNovaPergunta').on('click', function() {
 				Editor.Metodos.LimparCampos();
 			});
 		},
 		AoClicarRemover: function() {
-			$('#spnRemove').on('click', function() {
+			$('#btnRemove').on('click', function() {
 				var perguntaId = eval($('.lnPergunta.selecionado').attr('data-perguntaid'));
 				perguntas = _.without(perguntas, _.findWhere(perguntas, { id: perguntaId }));
 				Editor.Metodos.LimparCampos();
 				Editor.Metodos.AtualizarLista();
-				$('#spnRemove').css('visibility', 'hidden');
+				$('#btnRemove').css('visibility', 'hidden');
 			});
 		},
 		AoClicarSalvar: function() {
@@ -132,7 +134,9 @@ var Editor = {
 			$('#txtLink').val('');
 			$('.txtResposta').val('');
 			$('[name="rdbResposta"]').removeAttr('checked');
-			$('#containerPerguntas').removeAttr('data-idPergunta')
+			$('#containerPerguntas').removeAttr('data-idPergunta');
+			$('#ddlDificuldade').val(1);
+			$('#btnAdicionar').html('Adicionar Pergunta');
 		},
 		AtualizarLista: function() {
 			var categoriaId = eval($('#ddlCategorias').val());

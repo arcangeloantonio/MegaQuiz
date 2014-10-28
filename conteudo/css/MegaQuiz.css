@@ -1,192 +1,163 @@
-#content {
-	margin-top:20px;
-}
-
+#content {margin-top: 20px;}
+ 
 #tituloPerguntas {
 	font-size: 26px;
 	font-weight: bold;
-	color: #FF0000;	
-}
-
+	color: #FF0000;
+ }
+ 
 #containerCategoriasListaPerguntas {
-	text-align:left;
-	float:left;
-	width:300px;
-}
-
+	text-align: left;
+	float: left;
+	width: 300px;
+ }
+ 
 #ddlCategorias {
-	margin-bottom:10px;
+	margin-bottom: 10px;
 	width: 100%;
-}
-
+ }
+ 
+#lblTituloContainerPerguntas {
+	float: left;
+	width: 50%;
+	margin-top: 3px;
+ }
+ 
 #groupPerguntas {
 	border: 1px solid #000;
-	width:300px;
+	width: 300px;
 	height: 300px;
-	overflow:auto;"
-}
-
-#groupPerguntas .lnPergunta {
-	list-style:none;
-	padding-left:5px;
-}
-
-#groupPerguntas .lnPergunta:hover {
-	background-color:#3399FF;
-	cursor:default;
-	
-}
-
-#groupPerguntas .lnPergunta.selecionado {
-	background-color:#3399FF;
-	cursor:default;
-}
-
+	overflow: auto;
+	margin-top: 5px;
+ }
+ 
+	#groupPerguntas .lnPergunta {
+		list-style: none;
+		padding-left: 5px;
+	 }
+ 
+		#groupPerguntas .lnPergunta:hover {
+			background-color: #3399FF;
+			cursor: default;
+		 }
+ 
+		#groupPerguntas .lnPergunta.selecionado {
+			background-color: #3399FF;
+			cursor: default;
+		 }
+ 
 #containerPerguntas {
-	margin-left:60px;
-	text-align:left;
-	float:left;
+	margin-left: 60px;
+	text-align: left;
+	float: left;
 	width: 600px;
-}
-
-#containerPerguntas > .containerLink {
-	margin-top:10px;
-	width:230px;
-}
-
-#containerPerguntas > .containerLink #txtLink{
-	width:230px;
-}
-
-#containerPerguntas > .containerCategoria {
-	margin-top:10px;
-	width:200px;
-}
-
-#containerPerguntas > .containerCategoria #ddlCategoria{
-	width:180px;
-}
-
-#containerPerguntas > .containerDificuldade {
-	margin-top:10px;
-	width:140px;
-}
-
-#containerPerguntas > .containerDificuldade #ddlDificuldade{
-	width:100px;
-}
-
-#containerPerguntas .containerEnunciado {
-	width: 600px;
-}
-
-#containerPerguntas > .containerEnunciado #txtEnunciado {
-	width: 570px;
-}
-
-#containerQuestoesGeral {
-	margin-top:10px;
-}
-
+ }
+ 
+	#containerPerguntas > .containerLink {
+		margin-top: 10px;
+		width: 230px;
+	 }
+ 
+		#containerPerguntas > .containerLink #txtLink {width: 230px;}
+ 
+	#containerPerguntas > .containerCategoria {
+		margin-top: 10px;
+		width: 200px;
+	 }
+ 
+		#containerPerguntas > .containerCategoria #ddlCategoria {width: 180px;}
+ 
+	#containerPerguntas > .containerDificuldade {
+		margin-top: 10px;
+		width: 140px;
+	 }
+ 
+		#containerPerguntas > .containerDificuldade #ddlDificuldade {width: 100px;}
+ 
+	#containerPerguntas .containerEnunciado {width: 600px;}
+ 
+	#containerPerguntas > .containerEnunciado #txtEnunciado {width: 570px;}
+ 
+#containerQuestoesGeral {margin-top: 10px;}
+ 
 #containerQuestoes {
-	width:450px;
-	float:left;
-}
-
-#containerQuestoes > #spnQuestoes{
-	font-size:14px;
-	display:inline-block;
-	margin-bottom:5px;
-}
-
-#containerQuestoes .lblResposta {
-	float:left;
-	width:20px;
-}
-
-#containerQuestoes .txtResposta {
-	width:385px;
-}
-
-#containerQuestoes  .containerResposta {
-	margin-bottom:10px;
-}
-
+	width: 450px;
+	float: left;
+ }
+ 
+	#containerQuestoes > #spnQuestoes {
+		font-size: 14px;
+		display: inline-block;
+		margin-bottom: 5px;
+	 }
+ 
+	#containerQuestoes .lblResposta {
+		float: left;
+		width: 20px;
+	 }
+ 
+	#containerQuestoes .txtResposta {width: 385px;}
+ 
+	#containerQuestoes  .containerResposta {margin-bottom: 10px;}
+ 
 #containerCorretas {
-	width:150px;
-	float:left;
-}
-
-#containerCorretas  > #spnCorreta { 
-	font-size:14px;
-	display:inline-block;
-	margin-bottom:5px;
-}
-
-#containerCorretas  .containerCorreta {
-	margin-bottom:10px;
-	padding-top:1px;
-}
-
+	width: 150px;
+	float: left;
+ }
+ 
+	#containerCorretas  > #spnCorreta {
+		font-size: 14px;
+		display: inline-block;
+		margin-bottom: 5px;
+	 }
+ 
+	#containerCorretas  .containerCorreta {
+		margin-bottom: 10px;
+		padding-top: 1px;
+	 }
+ 
 #containerBotaoAdicionar {
-	text-align:right;
-	padding-right:80px;
-}
-
-#btnAdicionar {
-	margin-top:30px;
-}
-
+	text-align: right;
+	padding-right: 80px;
+ }
+ 
+#btnAdicionar {margin-top: 30px;}
+ 
 #containerBotao {
-	padding-right:80px;
-	margin-top:20px;
-	text-align:right;
-	
-}
-
+	padding-right: 80px;
+	margin-top: 20px;
+	text-align: right;
+ }
+ 
+	#containerBotao #spnInfoPerguntas {
+		margin-left: 200px;
+		color: #FF0000;
+		font-size: 12px;
+	 }
+ 
 .containerInput > label.labelInput {
-	display:inline-block;
+	display: inline-block;
 	font-size: 14px;
-	margin-bottom:5px;	
-}
-
-.containerInput > div.elementoInput {
-	margin-left:5px;
-	
-}
-
+	margin-bottom: 5px;
+ }
+ 
+.containerInput > div.elementoInput {margin-left: 5px;}
+ 
 .containerInput #containerControle {
-	float:left;
-	width:50%;
-	text-align:right;
-	line-height:15px;
-}
-
-.containerInput #containerControle #spnRemove {
-	visibility: hidden;
-}
-
-.containerInput .symbol {
-	background-color:#C6C6C6;
-	font-size: 20px;
-	font-weight:bold;
-	width:30px;
-	display:inline-block;
-	text-align:center;
-	margin-bottom:5px;
-	height:15px;
-	vertical-align:middle;
-	cursor:default;
-}
-
-.centralizar {
-	text-align:center;
-}
-
-.clear {
-	clear:both;
-}
-
-.float {
-	float:left;
-}
+	float: left;
+	width: 50%;
+	text-align: right;
+	line-height: 15px;
+ }
+ 
+.centralizar {text-align: center;}
+ 
+.clear {clear: both;}
+ 
+.escondida {display: none;}
+ 
+.invisivel {visibility: hidden;}
+ 
+.float {float: left;}
+ 
+.largura100 {width: 100%;}
