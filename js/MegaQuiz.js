@@ -33,6 +33,7 @@ var somAcerto;
 var somRoleta;
 var somErro;
 var somLigado;
+var somContagem;
 
 var tecla = {
 	DEL: 8,
@@ -105,11 +106,13 @@ function CarregarJogo() {
 }
 
 function ReiniciarJogo() {
+	if (somPergunta !== undefined) somPergunta.src = '';
 	somIntro = new Audio("conteudo/sfx/Intro.mp3");;
 	somPergunta = new Audio("conteudo/sfx/Pergunta.mp3");
 	somAcerto = new Audio("conteudo/sfx/Acerto.mp3");
 	somRoleta = new Audio("conteudo/sfx/Roleta.mp3");
 	somErro = new Audio("conteudo/sfx/Erro.mp3");	
+	somContagem = new Audio("conteudo/sfx/Contagem.mp3");
 	
 	cores = ["#B8D430", "#3AB745", "#029990", "#3501CB", "#2E2C75", "#673A7E", "#CC0071"];
 	materias = ["Geografia", "História", "Matemática", "Português", "Biologia", "Física", "Química"];
@@ -389,6 +392,8 @@ function Configuracoes() {
 			if (somErro.currentTime !== 0) somErro.currentTime = 0;
 			somRoleta.pause();
 			if (somRoleta.currentTime !== 0) somRoleta.currentTime = 0;
+			somContagem.pause();
+			if (somContagem.currentTime !== 0) somContagem.currentTime = 0;
 		}
 	};
 	this.Clique = function(x, y) {
@@ -468,7 +473,7 @@ function Fim() {
 		
 		$.each(pontosJogador, function(i, obj) {
 			if (obj.perdeu) {
-				obj.porcentagemResposta = 100;
+				obj.porcentagemResposta = 1.00;
 				obj.respondidas = 1;
 			}
 			porcentagemTotal += obj.porcentagemResposta;
@@ -522,8 +527,8 @@ function Fim() {
 		}
 	};
 	this.ObterDificuldade = function(numero, perdeu) {
-		if (perdeu !== undefined && perdeu) return 1.00;
 		if (numero === NaN || numero === "NaN" || isNaN(numero)) return 0.00;
+		if (numero === 1) return 1;
 		numero = (numero - 1) * -1;
 		return numero.toFixed(2);
 	};
@@ -754,6 +759,7 @@ function Roleta() {
 function Pergunta(perguntaSelecionada) {
 	this.respondeu = false;
 	this.acertou = false;
+	this.contando = false;
 	this.frames = 0;
 	this.DesenharHUD = function() {
 		if (this.tempo <= 0) this.ErrouResposta();
@@ -777,7 +783,6 @@ function Pergunta(perguntaSelecionada) {
 				this.DesenharPergunta(this.LETRAPERGUNTA.D, perguntaSelecionada.respostas[3]);
 				this.DesenharPergunta(this.LETRAPERGUNTA.E, perguntaSelecionada.respostas[4]);
 			}
-			console.log(this.respostaCerta);
 		}
 	};
 	
@@ -790,7 +795,9 @@ function Pergunta(perguntaSelecionada) {
 		}
 		context.font="20px Georgia";
 		
-		if (this.tempo <= 10) context.fillStyle = "#FF0000";		
+		if (this.tempo <= 10) context.fillStyle = "#FF0000";
+		if (this.tempo <= 10 && !this.contando) this.contando = true;
+		if (this.contando && somLigado) somContagem.play();
 		context.fillText(this.tempo + (this.tempo == 1 ? " segundo" : " segundos"), 630, 145);
 	};
 	
@@ -929,6 +936,9 @@ function Pergunta(perguntaSelecionada) {
 	this.ErrouResposta = function() {
 		pergunta.respondeu = true;
 		pergunta.acertou = false;
+		
+		somContagem.pause();
+		if (somContagem.currentTime !== 0) somContagem.currentTime = 0;
 		if (somLigado) somErro.play();
 		pontos = 0;
 		_.findWhere(pontosJogador, { id: perguntaSelecionada.categoriaId }).perdeu = true;
