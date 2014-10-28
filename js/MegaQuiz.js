@@ -118,6 +118,8 @@ function ReiniciarJogo() {
 	materias = ["Geografia", "História", "Matemática", "Português", "Biologia", "Física", "Química"];
 	arco = Math.PI / (materias.length/2);
 	
+	pontos = 0;
+	
 	pontosMaximos = {
 		Geografia: { id: 1, pontuacao: 0},
 		Historia: { id: 2, pontuacao: 0},
@@ -465,15 +467,16 @@ function Senha() {
 function Fim() {
 	this.Desenhar = function() {
 		context.drawImage(fundo, 0, 0);
-		DesenharFonteCentro("Você perdeu! :(", 50, 40, '#FF0000');
-		DesenharFonteCentro("Não fique triste! Confira abaixo as matérias que você teve mais dificuldade:", 90, 20, '#000000');
+		DesenharFonteCentro("Você perdeu! :(", 50, 30, '#FF0000');
+		DesenharFonteCentro("Sua pontuação final foi de " + pontos + " pontos.", 80, 20, '#000000');
+		DesenharFonteCentro("Não fique triste! Confira abaixo as matérias que você teve mais dificuldade:", 110, 20, '#000000');
 		
 		var porcentagemTotal = 0;
 		var contagemTotal = 0;
 		
 		$.each(pontosJogador, function(i, obj) {
 			if (obj.perdeu) {
-				obj.porcentagemResposta = 1.00;
+				obj.porcentagemResposta = 0.00;
 				obj.respondidas = 1;
 			}
 			porcentagemTotal += obj.porcentagemResposta;
@@ -489,17 +492,17 @@ function Fim() {
 		var porcFisica = this.ObterDificuldade(pontosJogador.Fisica.porcentagemResposta/pontosJogador.Fisica.respondidas, pontosJogador.Fisica.perdeu);
 		var porcQuimica = this.ObterDificuldade(pontosJogador.Quimica.porcentagemResposta/pontosJogador.Quimica.respondidas, pontosJogador.Quimica.perdeu);
 		
-		this.DesenhaGrafico("Geral", porcTotal, 120, '#0000FF');
-		this.DesenhaGrafico("Geografia", porcGeografia, 160, '#B8D430');
-		this.DesenhaGrafico("História", porcHistoria, 200, '#3AB745');
-		this.DesenhaGrafico("Matemática", porcMatematica, 240, '#029990');
-		this.DesenhaGrafico("Português", porcPortugues, 280, '#3501CB');
-		this.DesenhaGrafico("Biologia", porcBiologia, 320, '#2E2C75');
-		this.DesenhaGrafico("Física", porcFisica, 360, '#673A7E');
-		this.DesenhaGrafico("Química", porcQuimica, 400, '#CC0071');
+		this.DesenhaGrafico("Geral", porcTotal, 130, '#0000FF');
+		this.DesenhaGrafico("Geografia", porcGeografia, 170, '#B8D430');
+		this.DesenhaGrafico("História", porcHistoria, 210, '#3AB745');
+		this.DesenhaGrafico("Matemática", porcMatematica, 250, '#029990');
+		this.DesenhaGrafico("Português", porcPortugues, 290, '#3501CB');
+		this.DesenhaGrafico("Biologia", porcBiologia, 330, '#2E2C75');
+		this.DesenhaGrafico("Física", porcFisica, 370, '#673A7E');
+		this.DesenhaGrafico("Química", porcQuimica, 410, '#CC0071');
 		
-		DesenharFonteCentro("Para mais informações sobre a pergunta que você errou acesse:", 500, 20, '#000000');
-		DesenharFonteCentro(pergunta.linkAjuda, 550, 20, '#0000FF');
+		DesenharFonteCentro("Para mais informações sobre a pergunta que você errou acesse:", 510, 20, '#000000');
+		DesenharFonteCentro(pergunta.linkAjuda, 560, 20, '#0000FF');
 	};
 	this.DesenhaGrafico = function(materia, percentual, y, corGrafico) {
 		var porcentagemMaxima = 650;
@@ -511,7 +514,7 @@ function Fim() {
 		context.fillStyle = '#FFFFFF';
 		context.fillText(materia, 60, y+30);
 		context.fillStyle = '#000000';
-		context.fillText(percentual*100 + "%", 710, y+30);
+		context.fillText((percentual*100).toFixed(2) + "%", 710, y+30);
 	};
 	this.Clique = function(x, y) {
 		if (y >= 525 && y <= 560) {
@@ -528,7 +531,6 @@ function Fim() {
 	};
 	this.ObterDificuldade = function(numero, perdeu) {
 		if (numero === NaN || numero === "NaN" || isNaN(numero)) return 0.00;
-		if (numero === 1) return 1;
 		numero = (numero - 1) * -1;
 		return numero.toFixed(2);
 	};
@@ -539,6 +541,7 @@ function Ganhou() {
 		context.drawImage(fundo, 0, 0);
 		DesenharFonteCentro("Você ganhou o jogo! :D", 250, 40, '#FF0000');
 		DesenharFonteCentro("Não existem mais perguntas a serem respondidas!", 300, 30, '#000000');
+		DesenharFonteCentro("Sua pontuação final foi de " + pontos + " pontos.", 350, 30, '#000000');
 	};
 	this.Controles = function(evento) {
 		if (evento.keyCode === tecla.ENTER || evento.keyCode === tecla.ESC) {
@@ -940,7 +943,6 @@ function Pergunta(perguntaSelecionada) {
 		somContagem.pause();
 		if (somContagem.currentTime !== 0) somContagem.currentTime = 0;
 		if (somLigado) somErro.play();
-		pontos = 0;
 		_.findWhere(pontosJogador, { id: perguntaSelecionada.categoriaId }).perdeu = true;
 		setTimeout(function() { tela = TELAS.FIM; }, 1000);
 	};
