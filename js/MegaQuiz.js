@@ -404,10 +404,10 @@ function Configuracoes() {
 			tela = TELAS.MENU;
 		}
 		else if (somLigado && x >= 280 && x <= 515 && y >= 225 && y <= 250) {
-			somLigado = false;
+			this.ConfigurarSom();
 		}
 		else if (!somLigado && x >= 250 && x <= 550 && y >= 225 && y <= 250) {
-			somLigado = true;
+			this.ConfigurarSom();
 		}
 		else if (x >= 270 && x <= 530 && y >= 275 && y <= 305) {
 			tela = TELAS.SENHA;
@@ -469,7 +469,7 @@ function Fim() {
 		context.drawImage(fundo, 0, 0);
 		DesenharFonteCentro("Você perdeu! :(", 50, 30, '#FF0000');
 		DesenharFonteCentro("Sua pontuação final foi de " + pontos + " pontos.", 80, 20, '#000000');
-		DesenharFonteCentro("Não fique triste! Confira abaixo as matérias que você teve mais dificuldade:", 110, 20, '#000000');
+		DesenharFonteCentro("Não fique triste! Confira abaixo o seu aproveitamento:", 110, 20, '#000000');
 		
 		var porcentagemTotal = 0;
 		var contagemTotal = 0;
@@ -483,14 +483,14 @@ function Fim() {
 			contagemTotal += obj.respondidas;
 		});
 		
-		var porcTotal = this.ObterDificuldade(porcentagemTotal/contagemTotal);
-		var porcGeografia = this.ObterDificuldade(pontosJogador.Geografia.porcentagemResposta/pontosJogador.Geografia.respondidas, pontosJogador.Geografia.perdeu);
-		var porcHistoria = this.ObterDificuldade(pontosJogador.Historia.porcentagemResposta/pontosJogador.Historia.respondidas, pontosJogador.Historia.perdeu);
-		var porcMatematica = this.ObterDificuldade(pontosJogador.Matematica.porcentagemResposta/pontosJogador.Matematica.respondidas, pontosJogador.Matematica.perdeu);
-		var porcPortugues = this.ObterDificuldade(pontosJogador.Portugues.porcentagemResposta/pontosJogador.Portugues.respondidas, pontosJogador.Portugues.perdeu);
-		var porcBiologia = this.ObterDificuldade(pontosJogador.Biologia.porcentagemResposta/pontosJogador.Biologia.respondidas, pontosJogador.Biologia.perdeu);
-		var porcFisica = this.ObterDificuldade(pontosJogador.Fisica.porcentagemResposta/pontosJogador.Fisica.respondidas, pontosJogador.Fisica.perdeu);
-		var porcQuimica = this.ObterDificuldade(pontosJogador.Quimica.porcentagemResposta/pontosJogador.Quimica.respondidas, pontosJogador.Quimica.perdeu);
+		var porcTotal = this.ValidaNumero(porcentagemTotal/contagemTotal);
+		var porcGeografia = this.ValidaNumero(pontosJogador.Geografia.porcentagemResposta/pontosJogador.Geografia.respondidas);
+		var porcHistoria = this.ValidaNumero(pontosJogador.Historia.porcentagemResposta/pontosJogador.Historia.respondidas);
+		var porcMatematica = this.ValidaNumero(pontosJogador.Matematica.porcentagemResposta/pontosJogador.Matematica.respondidas);
+		var porcPortugues = this.ValidaNumero(pontosJogador.Portugues.porcentagemResposta/pontosJogador.Portugues.respondidas);
+		var porcBiologia = this.ValidaNumero(pontosJogador.Biologia.porcentagemResposta/pontosJogador.Biologia.respondidas);
+		var porcFisica = this.ValidaNumero(pontosJogador.Fisica.porcentagemResposta/pontosJogador.Fisica.respondidas);
+		var porcQuimica = this.ValidaNumero(pontosJogador.Quimica.porcentagemResposta/pontosJogador.Quimica.respondidas);
 		
 		this.DesenhaGrafico("Geral", porcTotal, 130, '#0000FF');
 		this.DesenhaGrafico("Geografia", porcGeografia, 170, '#B8D430');
@@ -501,23 +501,25 @@ function Fim() {
 		this.DesenhaGrafico("Física", porcFisica, 370, '#673A7E');
 		this.DesenhaGrafico("Química", porcQuimica, 410, '#CC0071');
 		
-		DesenharFonteCentro("Para mais informações sobre a pergunta que você errou acesse:", 510, 20, '#000000');
-		DesenharFonteCentro(pergunta.linkAjuda, 560, 20, '#0000FF');
+		if (pergunta.linkAjuda !== undefined) {
+			DesenharFonteCentro("Para mais informações sobre a pergunta que você errou acesse:", 510, 20, '#000000');
+			DesenharFonteCentro(pergunta.linkAjuda, 560, 20, '#0000FF');
+		}
 	};
 	this.DesenhaGrafico = function(materia, percentual, y, corGrafico) {
-		var porcentagemMaxima = 650;
+		var porcentagemMaxima = 630;
 		porcentagem = porcentagemMaxima * percentual;
 		context.fillStyle = corGrafico;
-		context.fillRect(50, y, porcentagem, 40);
-		context.fillRect(porcentagemMaxima+50, y, 5, 40);
+		context.fillRect(20, y, porcentagem, 40);
+		context.fillRect(porcentagemMaxima+20, y, 5, 40);
 		context.font= "30px Georgia";
 		context.fillStyle = '#FFFFFF';
-		context.fillText(materia, 60, y+30);
+		context.fillText(materia, 30, y+30);
 		context.fillStyle = '#000000';
-		context.fillText((percentual*100).toFixed(2) + "%", 710, y+30);
+		context.fillText((percentual*100).toFixed(2) + "%", 660, y+30);
 	};
 	this.Clique = function(x, y) {
-		if (y >= 525 && y <= 560) {
+		if (y >= 525 && y <= 560 && pergunta.linkAjuda !== undefined) {
 			window.open(pergunta.linkAjuda, "_blank");
 		}
 		else {
@@ -529,10 +531,9 @@ function Fim() {
 			ReiniciarJogo();
 		}
 	};
-	this.ObterDificuldade = function(numero, perdeu) {
-		if (numero === NaN || numero === "NaN" || isNaN(numero)) return 0.00;
-		numero = (numero - 1) * -1;
-		return numero.toFixed(2);
+	this.ValidaNumero = function(numero) {
+		if (numero === NaN || numero === "NaN" || isNaN(numero)) return 1;
+		return numero;
 	};
 }
 
