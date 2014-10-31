@@ -19,8 +19,7 @@ var TELAS = {
 	MENU: 4,
 	PERGUNTA: 5,
 	SENHA: 6,
-	FIM: 7,
-	GANHOU: 8
+	FIM: 7
 };
 
 var pontos = 0;
@@ -148,7 +147,6 @@ function ReiniciarJogo() {
 	creditos = new Creditos();
 	senha = new Senha();
 	fim = new Fim();
-	ganhou = new Ganhou();
 	
 	perguntas = bkpPerguntas;
 	
@@ -239,7 +237,7 @@ function Tocou(evento) {
 			creditos.Clique(x,y);
 		break;
 		case TELAS.ROLETA:
-			roleta.Girar();
+			roleta.Clique(x,y);
 		break;
 		case TELAS.PERGUNTA:
 			pergunta.VerificaResposta(x, y);
@@ -441,6 +439,7 @@ function Senha() {
 		}
 		else if (evento.keyCode === tecla.ENTER) {
 			if (btoa(this.Texto) == 'YWRtaW4=') {
+				tela = TELAS.MENU;
 				EntrarEditor();
 				$('#jogo').hide();
 				$('#editarPerguntas').show();
@@ -464,12 +463,20 @@ function Senha() {
 	};
 }
 
-function Fim() {
+function Fim(ganhou) {
 	this.Desenhar = function() {
 		context.drawImage(fundo, 0, 0);
-		DesenharFonteCentro("Você perdeu! :(", 50, 30, '#FF0000');
-		DesenharFonteCentro("Sua pontuação final foi de " + pontos + " pontos.", 80, 20, '#000000');
-		DesenharFonteCentro("Não fique triste! Confira abaixo o seu aproveitamento:", 110, 20, '#000000');
+		
+		if (ganhou) {
+			DesenharFonteCentro("Parabéns, você ganhou! :D", 50, 30, '#FF0000');
+			DesenharFonteCentro("Todas as respostas estão certas, não há mais questões a ser respondidas", 80, 20, '#000000');
+			DesenharFonteCentro("Sua pontuação final foi de " + pontos + " pontos! Confira abaixo o seu aproveitamento:", 110, 20, '#000000');
+		}
+		else {
+			DesenharFonteCentro("Você perdeu! :(", 50, 30, '#FF0000');
+			DesenharFonteCentro("Sua pontuação final foi de " + pontos + " pontos.", 80, 20, '#000000');
+			DesenharFonteCentro("Não fique triste! Confira abaixo o seu aproveitamento:", 110, 20, '#000000');
+		}
 		
 		var porcentagemTotal = 0;
 		var contagemTotal = 0;
@@ -478,7 +485,7 @@ function Fim() {
 			if (obj.perdeu) {
 				obj.porcentagemResposta = 0.00;
 				obj.respondidas = 1;
-			}
+			}			
 			porcentagemTotal += obj.porcentagemResposta;
 			contagemTotal += obj.respondidas;
 		});
@@ -511,6 +518,7 @@ function Fim() {
 		porcentagem = porcentagemMaxima * percentual;
 		context.fillStyle = corGrafico;
 		context.fillRect(20, y, porcentagem, 40);
+		context.fillRect(20, y, 5, 40);
 		context.fillRect(porcentagemMaxima+20, y, 5, 40);
 		context.font= "30px Georgia";
 		context.fillStyle = '#FFFFFF';
@@ -532,23 +540,9 @@ function Fim() {
 		}
 	};
 	this.ValidaNumero = function(numero) {
-		if (numero === NaN || numero === "NaN" || isNaN(numero)) return 1;
+		if (numero === NaN || numero === "NaN" || isNaN(numero)) return 0;
 		return numero;
 	};
-}
-
-function Ganhou() {
-	this.Desenhar = function() {
-		context.drawImage(fundo, 0, 0);
-		DesenharFonteCentro("Você ganhou o jogo! :D", 250, 40, '#FF0000');
-		DesenharFonteCentro("Não existem mais perguntas a serem respondidas!", 300, 30, '#000000');
-		DesenharFonteCentro("Sua pontuação final foi de " + pontos + " pontos.", 350, 30, '#000000');
-	};
-	this.Controles = function(evento) {
-		if (evento.keyCode === tecla.ENTER || evento.keyCode === tecla.ESC) {
-			ReiniciarJogo();
-		}
-	}
 }
 
 function Ajuda() {
@@ -634,6 +628,7 @@ function Roleta() {
 			somIntro.pause();
 			somIntro.currentTime = 0.0;
 			somPergunta.play();
+			somPergunta.volume = 0.8;
 		}
 		LimparCanvas();
 		if (this.parada) {
@@ -756,7 +751,14 @@ function Roleta() {
 			case (tecla.ENTER):
 				if (!this.girando) this.Girar();
 			break;
+			case (tecla.ESC):
+				ReiniciarJogo();
+			break;
 		};
+	};
+	
+	this.Clique = function(x,y) {
+		if (!this.girando) this.Girar();
 	};
 }
 
@@ -876,16 +878,18 @@ function Pergunta(perguntaSelecionada) {
 	}
 	
 	this.VerificaResposta = function(x, y) {	
-		var rect = canvas.getBoundingClientRect();
-		for (var p in this.LETRAPERGUNTA) {
-			var perguntaDaVez = this.LETRAPERGUNTA[p];
-			if (x >= this.quadradoInicioX && x <= this.quadradoLargura+this.quadradoInicioX && y >= perguntaDaVez.altura+this.distanciaFonteQuadrado && y <= this.quadradoAltura+perguntaDaVez.altura+this.distanciaFonteQuadrado) {
-				roleta = new Roleta();
-				if (perguntaDaVez.valor === this.respostaCerta) {
-					this.AcertouResposta();
-				}
-				else {
-					this.ErrouResposta();
+		if (!pergunta.respondeu) {
+			var rect = canvas.getBoundingClientRect();
+			for (var p in this.LETRAPERGUNTA) {
+				var perguntaDaVez = this.LETRAPERGUNTA[p];
+				if (x >= this.quadradoInicioX && x <= this.quadradoLargura+this.quadradoInicioX && y >= perguntaDaVez.altura+this.distanciaFonteQuadrado && y <= this.quadradoAltura+perguntaDaVez.altura+this.distanciaFonteQuadrado) {
+					roleta = new Roleta();
+					if (perguntaDaVez.valor === this.respostaCerta) {
+						this.AcertouResposta();
+					}
+					else {
+						this.ErrouResposta();
+					}
 				}
 			}
 		}
@@ -930,7 +934,8 @@ function Pergunta(perguntaSelecionada) {
 		 pontos = totalDePontos;
 		
 		if (materias.length == 0)  {
-			setTimeout(function() { tela = TELAS.GANHOU; }, 1000);
+			fim = new Fim(true);
+			setTimeout(function() { tela = TELAS.FIM; }, 1000);
 		}
 		else {
 			setTimeout(function() { tela = TELAS.ROLETA; }, 1000);
@@ -945,6 +950,7 @@ function Pergunta(perguntaSelecionada) {
 		if (somContagem.currentTime !== 0) somContagem.currentTime = 0;
 		if (somLigado) somErro.play();
 		_.findWhere(pontosJogador, { id: perguntaSelecionada.categoriaId }).perdeu = true;
+		fim = new Fim(false);
 		setTimeout(function() { tela = TELAS.FIM; }, 1000);
 	};
 }

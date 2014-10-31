@@ -38,6 +38,7 @@ var Editor = {
 		},
 		AoMudarCategoria: function() {
 			$('#ddlCategorias').on('change', function() {
+				$('#btnRemove').css('visibility', 'hidden');
 				Editor.Metodos.AtualizarLista();
 			});
 		},
@@ -105,7 +106,7 @@ var Editor = {
 				var perguntaId = eval($('#containerPerguntas').attr('data-idPergunta'));
 				
 				var novaPergunta = {
-						id: perguntaId === undefined ? Metodos.ObterProximoId() : perguntaId,
+						id: perguntaId === undefined ? Editor.Metodos.ObterProximoId() : perguntaId,
 						questao: enunciado,
 						respostas: [resposta1, resposta2, resposta3, resposta4, resposta5],
 						respostaCerta: eval(respostaCerta),
