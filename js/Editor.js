@@ -112,7 +112,8 @@ var Editor = {
 						respostaCerta: eval(respostaCerta),
 						linkAjuda: link,
 						categoriaId: categoriaId,
-						respondida: false
+						respondida: false,
+						dificuldade: dificuldade
 				};
 				
 				if (perguntaId !== undefined) {
