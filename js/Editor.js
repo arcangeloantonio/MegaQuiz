@@ -128,7 +128,10 @@ var Editor = {
 	},
 	Metodos: {
 		ObterProximoId: function() {
-			return _.sortBy(_.filter(perguntas, function(pergunta) { return pergunta.id }), function (id) {return id}).pop().id+1;
+			var idsOrdenados = [];
+			$(perguntas).each(function(i,obj) { idsOrdenados.push(obj.id) });
+			idsOrdenados.sort();
+			return idsOrdenados[idsOrdenados.length-1]+1;
 		},
 		LimparCampos: function() {
 			$('#txtEnunciado').val('');

@@ -158,8 +158,7 @@ function EntrarEditor() {
 	$('#editarPerguntas').show();
 	window.location.hash='editor';
 	if (somIntro !== undefined) {
-		somIntro.pause();
-		somIntro.currentTime = 0;
+		somIntro.src = '';
 	}
 	Editor.Iniciar();
 }
