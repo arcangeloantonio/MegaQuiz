@@ -65,16 +65,12 @@ var arco = 0;
 var pontosMaximos = [];
 var pontosJogador = [];
 
-var bkpPerguntas = [];
-
 function CarregarJogo() {
 	if (location.hash == "#editor") {
 		EntrarEditor();
 	}
 	
 	somLigado = true;
-	
-	bkpPerguntas = perguntas;
 	
 	canvas = document.getElementById('jogo');
 	
@@ -148,7 +144,7 @@ function ReiniciarJogo() {
 	senha = new Senha();
 	fim = new Fim();
 	
-	perguntas = bkpPerguntas;
+	$(perguntas).each(function(i,obj) { obj.respondida = false });
 	
 	tela = TELAS.MENU;
 }
