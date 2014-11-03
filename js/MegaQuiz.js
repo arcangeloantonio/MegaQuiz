@@ -507,7 +507,7 @@ function Fim(ganhou) {
 		this.DesenhaGrafico("Física", porcFisica, 370, '#673A7E');
 		this.DesenhaGrafico("Química", porcQuimica, 410, '#CC0071');
 		
-		if (pergunta.linkAjuda !== undefined) {
+		if (pergunta.linkAjuda !== undefined && !ganhou) {
 			DesenharFonteCentro("Para mais informações sobre a pergunta que você errou acesse:", 510, 20, '#000000');
 			DesenharFonteCentro(pergunta.linkAjuda, 560, 20, '#0000FF');
 		}

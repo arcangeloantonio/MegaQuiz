@@ -68,7 +68,7 @@ var Editor = {
 		AoClicarRemover: function() {
 			$('#btnRemove').on('click', function() {
 				var perguntaId = eval($('.lnPergunta.selecionado').attr('data-perguntaid'));
-				perguntas = _.without(perguntas, _.findWhere(perguntas, { id: perguntaId }));
+				perguntas = _.filter(perguntas, function(x) { return x.id != perguntaId });
 				Editor.Metodos.LimparCampos();
 				Editor.Metodos.AtualizarLista();
 				$('#btnRemove').css('visibility', 'hidden');
