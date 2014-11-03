@@ -113,7 +113,7 @@ var Editor = {
 						linkAjuda: link,
 						categoriaId: categoriaId,
 						respondida: false,
-						dificuldade: dificuldade
+						dificuldade: eval(dificuldade)
 				};
 				
 				if (perguntaId !== undefined) {
