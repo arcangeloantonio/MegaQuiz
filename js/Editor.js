@@ -1,11 +1,11 @@
-var categorias = {
-	Geografia: { id: 1, categoria: 'Geografia'},
-	Historia: { id: 2, categoria: 'História'},
-	Matematica: { id: 3, categoria: 'Matemática'},
-	Portugues: { id: 4, categoria: 'Português'},
-	Biologia: { id: 5, categoria: 'Biologia'},
-	Fisica: { id: 6, categoria: 'Física'},
-	Quimica: { id: 7, categoria: 'Química'},
+var categories = {
+	Geography: { id: 1, categoria: 'Geography'},
+	History: { id: 2, categoria: 'History'},
+	Mathematics: { id: 3, categoria: 'Mathematics'},
+	Portuguese: { id: 4, categoria: 'Portuguese'},
+	Biology: { id: 5, categoria: 'Biology'},
+	Physics: { id: 6, categoria: 'Physics'},
+	Chemistry: { id: 7, categoria: 'Chemistry'},
 }
 
 var Editor = {

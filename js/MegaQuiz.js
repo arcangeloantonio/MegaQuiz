@@ -70,7 +70,7 @@ var perguntas = [];
 
 function CarregarJogo() {
 	//Apagar quando colocar o json
-	perguntas = [{"id":2,"questao":"Quem proclamou a independência do Brasil?","respostas":["Napoleão Bonaparte","D. Pedro I","Leonardo da Vinci","Isaac Newton","Fiódor Dostoiévski"],"respostaCerta":2,"linkAjuda":"www.blablabla2.com","categoriaId":2,"respondida":false,"dificuldade":2},{"id":3,"questao":"Como é denominado um triângulo com todos os lados iguais?","respostas":["Ttriângulo Isósceles","Triângulo Escaleno","Triângulo Reto","Triângulo Angular","Triângulo Equilátero"],"respostaCerta":5,"linkAjuda":"www.blablabla2.com","categoriaId":3,"respondida":false,"dificuldade":3},{"id":4,"questao":"Identifique o pleonasmo","respostas":["Eu ri com eles","Vou subir para cima","Nos jantamos macarronada","Eu iria com vocês","Saimos juntos"],"respostaCerta":2,"linkAjuda":"www.blablabla2.com","categoriaId":4,"respondida":false,"dificuldade":4},{"id":5,"questao":"Quais seres não possuem células?","respostas":["Bactérias","Virús","Mamíferos","Plantas","Aves"],"respostaCerta":2,"linkAjuda":"www.blablabla2.com","categoriaId":5,"respondida":false,"dificuldade":5},{"id":6,"questao":"Qual a segunda lei de Newton?","respostas":["Princípio da Inércia","Princípio da Ação e Reação","Princípio da Transmissibilidade das Forças","Princípio Fundamental da Dinâmica(F = m.a)","Princípio da Conservação da Energia"],"respostaCerta":4,"linkAjuda":"www.blablabla2.com","categoriaId":6,"respondida":false,"dificuldade":3},{"id":7,"questao":"Quais são os elementos que compõem a água?","respostas":["H2SO4","H2O","NO","H2O2","NaCl"],"respostaCerta":2,"linkAjuda":"www.blablabla2.com","categoriaId":7,"respondida":false,"dificuldade":2},{"id":1,"questao":"Qual é a capital do Brasil?","respostas":["São Paulo","Bahia","Brasília","Rio de Janeiro","Acre"],"respostaCerta":3,"linkAjuda":"www.blablabla2.com","categoriaId":1,"respondida":false,"dificuldade":2},{"id":8,"questao":"Qual é a capital dos EUA?","respostas":["New York","Washington","Texas","California","Miami"],"respostaCerta":2,"linkAjuda":"www.tonhaodoido.com.br","categoriaId":1,"respondida":false,"dificuldade":3},{"id":9,"questao":"1+1","respostas":["1","2","3","4","5"],"respostaCerta":2,"linkAjuda":"www.tonhaodosbug.com","categoriaId":3,"respondida":false,"dificuldade":5}];
+	perguntas = [{"id":2,"questao":"What year did World War II start?","respostas":["1902","1939","1941","1922","2005"],"respostaCerta":2,"linkAjuda":"www.google.com","categoriaId":2,"respondida":false,"dificuldade":2},{"id":3,"questao":"What do we call a triangle with three equal sides?","respostas":["Isosceles Triangle","Scalene Triangle","Right Triangle","Obtuse Triangle","Equilateral Triangle"],"respostaCerta":5,"linkAjuda":"www.google.com","categoriaId":3,"respondida":false,"dificuldade":3},{"id":4,"questao":"Find the pleonasm","respostas":["I laugh with them","Burning Fire","We ate pasta","I would go with with you","We hangout together"],"respostaCerta":2,"linkAjuda":"www.google.com","categoriaId":4,"respondida":false,"dificuldade":4},{"id":5,"questao":"Plants receive their nutrients mainly from:","respostas":["Chlorophyll","Soil","Atmosphere","Light","Bees"],"respostaCerta":2,"linkAjuda":"www.google.com","categoriaId":5,"respondida":false,"dificuldade":5},{"id":6,"questao":"What is the name of the 2nd Law of Motion?","respostas":["Law of Inertia","Law of Action and Reaction","Refraction Law","Law of Force and Acceleration(F = m.a)","The entropy"],"respostaCerta":4,"linkAjuda":"www.google.com","categoriaId":6,"respondida":false,"dificuldade":3},{"id":7,"questao":"What are the components of water?","respostas":["H2SO4","H2O","NO","H2O2","NaCl"],"respostaCerta":2,"linkAjuda":"www.google.com","categoriaId":7,"respondida":false,"dificuldade":2},{"id":1,"questao":"What is the capital of Australia?","respostas":["Sydney","Melbourne","Canberra","Brisbane","Perth"],"respostaCerta":3,"linkAjuda":"www.google.com","categoriaId":1,"respondida":false,"dificuldade":2},{"id":8,"questao":"What is the capital of The Republic of Ireland?","respostas":["Waterford","Dublin","Wexford","Belfast","Galway"],"respostaCerta":2,"linkAjuda":"www.google.com","categoriaId":1,"respondida":false,"dificuldade":3}];
 	if (location.hash == "#editor") {
 		EntrarEditor();
 	}
@@ -115,29 +115,29 @@ function ReiniciarJogo() {
 	somContagem = new Audio("conteudo/sfx/Contagem.mp3");
 	
 	cores = ["#B8D430", "#3AB745", "#029990", "#3501CB", "#2E2C75", "#673A7E", "#CC0071"];
-	materias = ["Geografia", "História", "Matemática", "Português", "Biologia", "Física", "Química"];
+	materias = ["Geography", "History", "Mathematics", "Portuguese", "Biology", "Physics", "Chemistry"];
 	arco = Math.PI / (materias.length/2);
 	
 	pontos = 0;
 	
 	pontosMaximos = {
-		Geografia: { id: 1, pontuacao: 0},
-		Historia: { id: 2, pontuacao: 0},
-		Matematica: { id: 3, pontuacao: 0},
-		Portugues: { id: 4, pontuacao: 0},
-		Biologia: { id: 5, pontuacao: 0},
-		Fisica: { id: 6, pontuacao: 0},
-		Quimica: { id: 7, pontuacao: 0}
+		Geography: { id: 1, pontuacao: 0},
+		History: { id: 2, pontuacao: 0},
+		Mathematics: { id: 3, pontuacao: 0},
+		Portuguese: { id: 4, pontuacao: 0},
+		Biology: { id: 5, pontuacao: 0},
+		Physics: { id: 6, pontuacao: 0},
+		Chemistry: { id: 7, pontuacao: 0}
 	}
 	
 	pontosJogador = {
-		Geografia: { id: 1, pontuacao: 0, porcentagemResposta : 0, respondidas: 0, perdeu: false},
-		Historia: { id: 2, pontuacao: 0, porcentagemResposta : 0, respondidas: 0, perdeu: false},
-		Matematica: { id: 3, pontuacao: 0, porcentagemResposta : 0, respondidas: 0, perdeu: false},
-		Portugues: { id: 4, pontuacao: 0, porcentagemResposta : 0, respondidas: 0, perdeu: false},
-		Biologia: { id: 5, pontuacao: 0, porcentagemResposta : 0, respondidas: 0, perdeu: false},
-		Fisica: { id: 6, pontuacao: 0, porcentagemResposta : 0, respondidas: 0, perdeu: false},
-		Quimica: { id: 7, pontuacao: 0, porcentagemResposta : 0, respondidas: 0, perdeu: false}
+		Geography: { id: 1, pontuacao: 0, porcentagemResposta : 0, respondidas: 0, perdeu: false},
+		History: { id: 2, pontuacao: 0, porcentagemResposta : 0, respondidas: 0, perdeu: false},
+		Mathematics: { id: 3, pontuacao: 0, porcentagemResposta : 0, respondidas: 0, perdeu: false},
+		Portuguese: { id: 4, pontuacao: 0, porcentagemResposta : 0, respondidas: 0, perdeu: false},
+		Biology: { id: 5, pontuacao: 0, porcentagemResposta : 0, respondidas: 0, perdeu: false},
+		Physics: { id: 6, pontuacao: 0, porcentagemResposta : 0, respondidas: 0, perdeu: false},
+		Chemistry: { id: 7, pontuacao: 0, porcentagemResposta : 0, respondidas: 0, perdeu: false}
 	}
 	
 	menu = new Menu();
@@ -308,10 +308,10 @@ function Menu() {
 		context.drawImage(intro, 0,0);
 		var corTitulo = '';
 		
-		DesenharFonteCentro("Jogar", 420, 30, this.posicao == 0 ? "#FF0000" : "#000000");
-		DesenharFonteCentro("Configurações", 465, 30, this.posicao == 1 ? "#FF0000" : "#000000");
-		DesenharFonteCentro("Ajuda", 510, 30, this.posicao == 2 ? "#FF0000" : "#000000");
-		DesenharFonteCentro("Créditos", 555, 30, this.posicao == 3 ? "#FF0000" : "#000000");
+		DesenharFonteCentro("Play", 420, 30, this.posicao == 0 ? "#FF0000" : "#000000");
+		DesenharFonteCentro("Settings", 465, 30, this.posicao == 1 ? "#FF0000" : "#000000");
+		DesenharFonteCentro("Help", 510, 30, this.posicao == 2 ? "#FF0000" : "#000000");
+		DesenharFonteCentro("Credits", 555, 30, this.posicao == 3 ? "#FF0000" : "#000000");
 	};
 	this.Controles = function(evento) {
 		switch (evento.keyCode) {
@@ -348,10 +348,10 @@ function Configuracoes() {
 	this.posicao = 1;
 	this.Desenhar = function() {	
 		context.drawImage(opcoes, 0, 0);
-		var textoSom = somLigado ? "LIGADO" : "DESLIGADO";
-		DesenharFonteCentro("Configurações", 160, 30, '#000000');
-		DesenharFonteCentro("Som < " + textoSom + " >", 250, 30, this.posicao == 1 ? '#FF0000' : '#000000');
-		DesenharFonteCentro("Editor de Perguntas", 300, 30, this.posicao == 2 ? '#FF0000' : '#000000');
+		var textoSom = somLigado ? "ON" : "OFF";
+		DesenharFonteCentro("Settings", 160, 30, '#000000');
+		DesenharFonteCentro("Sound < " + textoSom + " >", 250, 30, this.posicao == 1 ? '#FF0000' : '#000000');
+		DesenharFonteCentro("Questions Editor", 300, 30, this.posicao == 2 ? '#FF0000' : '#000000');
 	};
 	this.Controles = function(evento) {
 		switch (evento.keyCode) {
@@ -420,7 +420,7 @@ function Senha() {
 	this.Desenhar = function() {
 		this.frames++;
 		context.drawImage(opcoes, 0, 0);
-		DesenharFonteCentro("Editor de Perguntas", 160, 30, '#000000');
+		DesenharFonteCentro("Questions Editor", 160, 30, '#000000');
 		if (this.frames > 0 && this.frames < 30) {
 			this.pipe = '|';
 		}
@@ -428,7 +428,7 @@ function Senha() {
 			this.pipe = ' ';
 			if (this.frames > 60) this.frames = 0;
 		}
-		DesenharFonteCentro("Digite a senha previamente cadastrada", 250, 30, '#000000');
+		DesenharFonteCentro("Input your password previously given", 250, 30, '#000000');
 		DesenharFonteCentro(this.Texto+this.pipe, 300, 30, '#000000');
 		
 	};
@@ -468,14 +468,14 @@ function Fim(ganhou) {
 		context.drawImage(fundo, 0, 0);
 		
 		if (ganhou) {
-			DesenharFonteCentro("Parabéns, você ganhou! :D", 50, 30, '#FF0000');
-			DesenharFonteCentro("Todas as respostas estão certas, não há mais questões a ser respondidas", 80, 20, '#000000');
-			DesenharFonteCentro("Sua pontuação final foi de " + pontos + " pontos! Confira abaixo o seu aproveitamento:", 110, 20, '#000000');
+			DesenharFonteCentro("Congratulations, you won! :D", 50, 30, '#FF0000');
+			DesenharFonteCentro("All your answers were correct, there are no more questions left", 80, 20, '#000000');
+			DesenharFonteCentro("Your final score is " + pontos + " points! Check below your outcomes:", 110, 20, '#000000');
 		}
 		else {
-			DesenharFonteCentro("Você perdeu! :(", 50, 30, '#FF0000');
-			DesenharFonteCentro("Sua pontuação final foi de " + pontos + " pontos.", 80, 20, '#000000');
-			DesenharFonteCentro("Não fique triste! Confira abaixo o seu aproveitamento:", 110, 20, '#000000');
+			DesenharFonteCentro("You lose! :(", 50, 30, '#FF0000');
+			DesenharFonteCentro("Your final score is " + pontos + " points.", 80, 20, '#000000');
+			DesenharFonteCentro("Don't be sad! Check below your outcomes:", 110, 20, '#000000');
 		}
 		
 		var porcentagemTotal = 0;
@@ -491,25 +491,25 @@ function Fim(ganhou) {
 		});
 		
 		var porcTotal = this.ValidaNumero(porcentagemTotal/contagemTotal);
-		var porcGeografia = this.ValidaNumero(pontosJogador.Geografia.porcentagemResposta/pontosJogador.Geografia.respondidas);
-		var porcHistoria = this.ValidaNumero(pontosJogador.Historia.porcentagemResposta/pontosJogador.Historia.respondidas);
-		var porcMatematica = this.ValidaNumero(pontosJogador.Matematica.porcentagemResposta/pontosJogador.Matematica.respondidas);
-		var porcPortugues = this.ValidaNumero(pontosJogador.Portugues.porcentagemResposta/pontosJogador.Portugues.respondidas);
-		var porcBiologia = this.ValidaNumero(pontosJogador.Biologia.porcentagemResposta/pontosJogador.Biologia.respondidas);
-		var porcFisica = this.ValidaNumero(pontosJogador.Fisica.porcentagemResposta/pontosJogador.Fisica.respondidas);
-		var porcQuimica = this.ValidaNumero(pontosJogador.Quimica.porcentagemResposta/pontosJogador.Quimica.respondidas);
+		var porcGeografia = this.ValidaNumero(pontosJogador.Geography.porcentagemResposta/pontosJogador.Geography.respondidas);
+		var porcHistoria = this.ValidaNumero(pontosJogador.History.porcentagemResposta/pontosJogador.History.respondidas);
+		var porcMatematica = this.ValidaNumero(pontosJogador.Mathematics.porcentagemResposta/pontosJogador.Mathematics.respondidas);
+		var porcPortugues = this.ValidaNumero(pontosJogador.Portuguese.porcentagemResposta/pontosJogador.Portuguese.respondidas);
+		var porcBiologia = this.ValidaNumero(pontosJogador.Biology.porcentagemResposta/pontosJogador.Biology.respondidas);
+		var porcFisica = this.ValidaNumero(pontosJogador.Physics.porcentagemResposta/pontosJogador.Physics.respondidas);
+		var porcQuimica = this.ValidaNumero(pontosJogador.Chemistry.porcentagemResposta/pontosJogador.Chemistry.respondidas);
 		
-		this.DesenhaGrafico("Geral", porcTotal, 130, '#0000FF');
-		this.DesenhaGrafico("Geografia", porcGeografia, 170, '#B8D430');
-		this.DesenhaGrafico("História", porcHistoria, 210, '#3AB745');
-		this.DesenhaGrafico("Matemática", porcMatematica, 250, '#029990');
-		this.DesenhaGrafico("Português", porcPortugues, 290, '#3501CB');
-		this.DesenhaGrafico("Biologia", porcBiologia, 330, '#2E2C75');
-		this.DesenhaGrafico("Física", porcFisica, 370, '#673A7E');
-		this.DesenhaGrafico("Química", porcQuimica, 410, '#CC0071');
+		this.DesenhaGrafico("General", porcTotal, 130, '#0000FF');
+		this.DesenhaGrafico("Geography", porcGeografia, 170, '#B8D430');
+		this.DesenhaGrafico("History", porcHistoria, 210, '#3AB745');
+		this.DesenhaGrafico("Mathematics", porcMatematica, 250, '#029990');
+		this.DesenhaGrafico("Portuguese", porcPortugues, 290, '#3501CB');
+		this.DesenhaGrafico("Biology", porcBiologia, 330, '#2E2C75');
+		this.DesenhaGrafico("Physics", porcFisica, 370, '#673A7E');
+		this.DesenhaGrafico("Chemistry", porcQuimica, 410, '#CC0071');
 		
 		if (pergunta.linkAjuda !== undefined && !ganhou) {
-			DesenharFonteCentro("Para mais informações sobre a pergunta que você errou acesse:", 510, 20, '#000000');
+			DesenharFonteCentro("For more information about the question that you answered wrong enter at:", 510, 20, '#000000');
 			DesenharFonteCentro(pergunta.linkAjuda, 560, 20, '#0000FF');
 		}
 	};
@@ -548,11 +548,11 @@ function Fim(ganhou) {
 function Ajuda() {
 	this.Desenhar = function() {
 		context.drawImage(opcoes, 0, 0);
-		DesenharFonteCentro("Ajuda", 160, 30, '#000000');
-		var texto = "Gire a roleta e boa sorte! Seu objetivo é responder as perguntas de acordo com a matéria, e não se esqueça do tempo! Cada resposta certa acumulará pontos e no final será dado o Rank! Errou alguma resposta? não fique triste, daremos um link para você acessar e ficar por dentro daquele assunto!"
+		DesenharFonteCentro("Help", 160, 30, '#000000');
+		var texto = "Spin the roulette and good luck! Your goal is to answer the questions according the subject, and don't forget the time! Each correct answer give some points and at the end you will know your rank! Answered any question wrong? Don't be sad, we will show to you an website to learn more about this subject!"
 		QuebrarTexto(texto, 120, 230, 600, 30, 30);
 		
-		var bonsEstudos = "Bons estudos!";
+		var bonsEstudos = "Good studies!";
 		context.font= "30 px Georgia";
 		context.fillStyle = "#000000";
 		context.fillText(bonsEstudos, screenWidth/2 - context.measureText(bonsEstudos).width/2, 465);	
@@ -580,10 +580,10 @@ function Ajuda() {
 function Creditos() {
 	this.Desenhar = function() {
 		context.drawImage(opcoes, 0, 0);
-		DesenharFonteCentro("Créditos", 160, 30, '#000000');
-		DesenharFonteCentro("Programação: Antonio Ruggiero Arcangelo", 250, 30, '#000000');
+		DesenharFonteCentro("Credits", 160, 30, '#000000');
+		DesenharFonteCentro("Development: Antonio Ruggiero Arcangelo", 250, 30, '#000000');
 		DesenharFonteCentro("Game Design: Diego Fernandes Resende", 300, 30, '#000000');
-		DesenharFonteCentro("Arte: Stephen Cralcev", 350, 30, '#000000');	
+		DesenharFonteCentro("Art: Stephen Cralcev", 350, 30, '#000000');	
 	};
 	this.Controles = function(evento) {
 		switch (evento.keyCode) {
@@ -633,25 +633,25 @@ function Roleta() {
 		LimparCanvas();
 		if (this.parada) {
 			switch (this.materiaSelecionada) {
-				case "Geografia":	
+				case "Geography":	
 				context.drawImage(imgGeografia, 0, 0);
 				break;
-				case "História":
+				case "History":
 				context.drawImage(imgHistoria, 0, 0);
 				break;
-				case "Matemática":
+				case "Mathematics":
 				context.drawImage(imgMatematica, 0, 0);
 				break;
-				case "Português":
+				case "Portuguese":
 				context.drawImage(imgPortugues, 0, 0);
 				break;
-				case "Biologia":
+				case "Biology":
 				context.drawImage(imgBiologia, 0, 0);
 				break;
-				case "Física":
+				case "Physics":
 				context.drawImage(imgFisica, 0, 0);
 				break;
-				case "Química":
+				case "Chemistry":
 				context.drawImage(imgQuimica, 0, 0);
 				break;
 			}			
@@ -683,7 +683,7 @@ function Roleta() {
 			this.DesenharSeta();
 			context.font = 'bold 30px sans-serif';
 			context.fillStyle = "#FF0000";
-			var pontuacao = "Pontos: " + pontos;
+			var pontuacao = "Points: " + pontos;
 			context.fillText(pontuacao, screenWidth-context.measureText(pontuacao).width-10, screenHeight-10);
 		}
 	};
@@ -727,7 +727,7 @@ function Roleta() {
 		var arcd = arco * 180 / Math.PI;
 		var index = Math.floor((360 - graus % 360) / arcd);
 		
-		var materiaId =  _.findWhere(categorias, { categoria: materias[index] }).id;
+		var materiaId =  _.findWhere(categories, { categoria: materias[index] }).id;
 		
 		pergunta = pergunta.SortearPergunta(materiaId);
 		setTimeout(function() { tela = TELAS.PERGUNTA}, 1000);
@@ -900,7 +900,7 @@ function Pergunta(perguntaSelecionada) {
 		_.findWhere(perguntas, { id: perguntaSelecionada.id }).respondida = true;
 		var perguntasDaCategoria = _.where(perguntas, { categoriaId: perguntaSelecionada.categoriaId, respondida: false });
 		if (perguntasDaCategoria.length == 0) {
-			var materiaTirar = _.findWhere(categorias, { id: perguntaSelecionada.categoriaId }).categoria;
+			var materiaTirar = _.findWhere(categories, { id: perguntaSelecionada.categoriaId }).categoria;
 			materias = _.without(materias, materiaTirar);
 			arco = Math.PI / (materias.length/2);
 		}
